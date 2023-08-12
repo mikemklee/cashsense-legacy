@@ -15,7 +15,7 @@ export const load = async ({ locals: { supabase, getSession } }) => {
 
   const { data: transactions} = await supabase
   .from('transactions')
-  .select(`*`)
+  .select(`*`) 
 
   return { session, profile, transactions }
 }
@@ -30,13 +30,15 @@ export const actions = {
 
     const session = await getSession()
 
+    const userId = session?.user.id as string
+
     const { error } = await supabase.from('profiles').upsert({
-      id: session?.user.id,
+      id: userId,
       full_name: fullName,
       username,
       website,
       avatar_url: avatarUrl,
-      updated_at: new Date(),
+      updated_at: new Date().toISOString(),
     })
 
     if (error) {
