@@ -5,8 +5,8 @@
 	export let data
 	export let form
 
-	let { session, supabase, profile } = data
-	$: ({ session, supabase, profile } = data)
+	let { session, supabase, profile, transactions } = data
+	$: ({ session, supabase, profile, transactions } = data)
 
 	let profileForm: HTMLFormElement
 	let loading = false
@@ -14,6 +14,8 @@
 	let username: string = profile?.username ?? ''
 	let website: string = profile?.website ?? ''
 	let avatarUrl: string = profile?.avatar_url ?? ''
+
+	$: console.log('wtf??', transactions)
 
 	const handleSubmit: SubmitFunction = () => {
 		loading = true
@@ -74,4 +76,14 @@
 			<button class="button block" disabled={loading}>Sign Out</button>
 		</div>
 	</form>
+
+	<div>
+		{#if transactions}
+			{#each transactions as transaction}
+				<div>
+					{JSON.stringify(transaction, null, 2)}
+				</div>
+			{/each}
+		{/if}
+	</div>
 </div>

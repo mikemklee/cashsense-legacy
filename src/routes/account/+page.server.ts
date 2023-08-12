@@ -13,7 +13,11 @@ export const load = async ({ locals: { supabase, getSession } }) => {
     .eq('id', session.user.id)
     .single()
 
-  return { session, profile }
+  const { data: transactions} = await supabase
+  .from('transactions')
+  .select(`*`)
+
+  return { session, profile, transactions }
 }
 
 export const actions = {
