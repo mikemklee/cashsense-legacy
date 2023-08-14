@@ -18,6 +18,7 @@
 		await fetch('/api/auth/signout', {
 			method: 'POST'
 		});
+		goto('/');
 	}
 
 	$: pathname = $page.url.pathname;

@@ -28,7 +28,9 @@
 </svelte:head>
 
 <main class="grow flex flex-col bg-gray-800">
-	<Navbar {profile} />
+	{#if session}
+		<Navbar {profile} />
+	{/if}
 	<div class="w-full h-full">
 		<slot />
 	</div>
