@@ -1,9 +1,8 @@
 <script lang="ts">
-	import type { LiftedTransaction } from '../../api/transactions/+server';
-
 	import Heading from '$lib/Heading.svelte';
-	import ExpensesByCategoryBarChart from '$lib/charts/ExpensesByCategoryBar/Container.svelte';
+	import ExpensesByCategoryBarChart from '$lib/components/charts/ExpensesByCategoryBar/Container.svelte';
 	import type { ExpenseByCategory, ExpensesByCategoryMap } from '$lib/constants';
+	import type { LiftedTransaction } from '$lib/types';
 
 	export let transactions: LiftedTransaction[] = [];
 	$: expenses = transactions.filter((transaction) => transaction.amount < 0);

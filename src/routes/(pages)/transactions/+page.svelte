@@ -35,8 +35,6 @@
 		const response = await fetch(queryPath);
 		const data = await response.json();
 
-		console.log(data);
-
 		transactions = data.filter(
 			(transaction: LiftedTransaction) =>
 				selectedCategories.includes(transaction.category_id) &&
