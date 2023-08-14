@@ -17,6 +17,8 @@ export type Category = Row<'categories'>;
 export type CategoryInsertDto = InsertDto<'categories'>;
 export type CategoryUpdateDto = UpdateDto<'categories'>;
 
+export type Profile = Row<'profiles'>;
+
 export interface LiftedTransaction extends Transaction {
   account: Pick<Account, 'id' | 'name'>;
   category: Pick<Category, 'id' | 'name' | 'color'>;
