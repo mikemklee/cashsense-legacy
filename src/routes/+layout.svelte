@@ -9,8 +9,8 @@
 
 	export let data;
 
-	let { supabase, session } = data;
-	$: ({ supabase, session } = data);
+	let { supabase, session, profile } = data;
+	$: ({ supabase, session, profile } = data);
 
 	onMount(() => {
 		const { data } = supabase.auth.onAuthStateChange((event, _session) => {
@@ -21,6 +21,12 @@
 
 		return () => data.subscription.unsubscribe();
 	});
+
+	async function handleLogout() {
+		await fetch('/auth/signout', {
+			method: 'POST'
+		});
+	}
 </script>
 
 <svelte:head>
@@ -28,7 +34,7 @@
 </svelte:head>
 
 <main class="grow flex flex-col bg-gray-800">
-	<Navbar />
+	<Navbar {profile} onLogout={handleLogout} />
 	<div class="w-full h-full">
 		<slot />
 	</div>
