@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Modal from '$lib/Modal.svelte';
-	import Button from '$lib/Button.svelte';
-	import SelectInput from '$lib/inputs/SelectInput.svelte';
-	import TextInput from '$lib/inputs/TextInput.svelte';
+	import Modal from '$lib/components/Modal.svelte';
+	import Button from '$lib/components/Button.svelte';
+	import SelectInput from '$lib/components/inputs/SelectInput.svelte';
+	import TextInput from '$lib/components/inputs/TextInput.svelte';
 
 	let name = '';
 	let type = '';

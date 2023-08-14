@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 
 	import { invalidate } from '$app/navigation';
-	import Navbar from '$lib/Navbar.svelte';
+	import Navbar from '$lib/components/Navbar.svelte';
 	import '../app.css';
 
 	export let data;

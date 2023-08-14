@@ -3,15 +3,15 @@
 	import { format as dateFormat, startOfMonth } from 'date-fns';
 	import { onMount } from 'svelte';
 
-	import Button from '$lib/Button.svelte';
-	import CategoryTag from '$lib/CategoryTag.svelte';
-	import Drawer from '$lib/Drawer.svelte';
-	import Heading from '$lib/Heading.svelte';
-	import Selectable from '$lib/Selectable.svelte';
-	import DateInput from '$lib/inputs/DateInput.svelte';
-	import AmountCell from '$lib/table/AmountCell.svelte';
-	import CategoryCell from '$lib/table/CategoryCell.svelte';
-	import DataTable from '$lib/table/DataTable.svelte';
+	import Button from '$lib/components/Button.svelte';
+	import CategoryTag from '$lib/components/CategoryTag.svelte';
+	import Drawer from '$lib/components/Drawer.svelte';
+	import Heading from '$lib/components/Heading.svelte';
+	import Selectable from '$lib/components/Selectable.svelte';
+	import DateInput from '$lib/components/inputs/DateInput.svelte';
+	import AmountCell from '$lib/components/table/AmountCell.svelte';
+	import CategoryCell from '$lib/components/table/CategoryCell.svelte';
+	import DataTable from '$lib/components/table/DataTable.svelte';
 	import type { Account, Category, LiftedTransaction } from '$lib/types';
 	import NewTransactionPanel from './NewTransactionPanel.svelte';
 	import TransactionInsights from './TransactionInsights.svelte';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Heading from '$lib/Heading.svelte';
+	import Heading from '$lib/components/Heading.svelte';
 	import ExpensesByCategoryBarChart from '$lib/components/charts/ExpensesByCategoryBar/Container.svelte';
 	import type { ExpenseByCategory, ExpensesByCategoryMap } from '$lib/constants';
 	import type { LiftedTransaction } from '$lib/types';

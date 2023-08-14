@@ -2,9 +2,9 @@
 	import Icon from '@iconify/svelte';
 	import { onMount } from 'svelte';
 
-	import Button from '$lib/Button.svelte';
-	import CategoryTag from '$lib/CategoryTag.svelte';
-	import Heading from '$lib/Heading.svelte';
+	import Button from '$lib/components/Button.svelte';
+	import CategoryTag from '$lib/components/CategoryTag.svelte';
+	import Heading from '$lib/components/Heading.svelte';
 	import type { Category } from '$lib/types';
 	import EditRecordModal from './EditRecordModal.svelte';
 	import NewRecordModal from './NewRecordModal.svelte';

@@ -2,8 +2,8 @@
 	import Icon from '@iconify/svelte';
 	import { onMount } from 'svelte';
 
-	import Button from '$lib/Button.svelte';
-	import Heading from '$lib/Heading.svelte';
+	import Button from '$lib/components/Button.svelte';
+	import Heading from '$lib/components/Heading.svelte';
 	import type { Account } from '$lib/types';
 	import NewAccountModal from './NewAccountModal.svelte';
 

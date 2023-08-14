@@ -1,5 +1,5 @@
 <script>
-	import CategoryTag from '$lib/CategoryTag.svelte';
+	import CategoryTag from '$lib/components/CategoryTag.svelte';
 
 	export let getValue;
 

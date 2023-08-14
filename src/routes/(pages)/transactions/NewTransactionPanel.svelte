@@ -3,13 +3,13 @@
 	import { format } from 'date-fns';
 	import { onMount } from 'svelte';
 
-	import Button from '$lib/Button.svelte';
-	import Collapsible from '$lib/Collapsible.svelte';
-	import Heading from '$lib/Heading.svelte';
-	import DateInput from '$lib/inputs/DateInput.svelte';
-	import NumberInput from '$lib/inputs/NumberInput.svelte';
-	import SelectInput, { type Option } from '$lib/inputs/SelectInput.svelte';
-	import TextInput from '$lib/inputs/TextInput.svelte';
+	import Button from '$lib/components/Button.svelte';
+	import Collapsible from '$lib/components/Collapsible.svelte';
+	import Heading from '$lib/components/Heading.svelte';
+	import DateInput from '$lib/components/inputs/DateInput.svelte';
+	import NumberInput from '$lib/components/inputs/NumberInput.svelte';
+	import SelectInput, { type Option } from '$lib/components/inputs/SelectInput.svelte';
+	import TextInput from '$lib/components/inputs/TextInput.svelte';
 
 	export let showPanel: boolean;
 	export let onClose = () => {};

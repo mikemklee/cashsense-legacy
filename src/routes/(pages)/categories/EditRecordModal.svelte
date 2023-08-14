@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Button from '$lib/Button.svelte';
-	import Modal from '$lib/Modal.svelte';
-	import ColorInput from '$lib/inputs/ColorInput.svelte';
-	import TextInput from '$lib/inputs/TextInput.svelte';
+	import Button from '$lib/components/Button.svelte';
+	import Modal from '$lib/components/Modal.svelte';
+	import ColorInput from '$lib/components/inputs/ColorInput.svelte';
+	import TextInput from '$lib/components/inputs/TextInput.svelte';
 	import type { Category } from '$lib/types';
 
 	export let record: Category;
