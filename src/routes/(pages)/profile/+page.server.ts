@@ -13,16 +13,13 @@ export const load = async ({ locals: { supabase, getSession } }) => {
     .eq('id', session.user.id)
     .single()
 
-  const { data: transactions} = await supabase
-  .from('transactions')
-  .select(`*`) 
-
-  return { session, profile, transactions }
+  return { session, profile }
 }
 
 export const actions = {
   update: async ({ request, locals: { supabase, getSession } }) => {
     const formData = await request.formData()
+
     const fullName = formData.get('fullName') as string
     const username = formData.get('username') as string
     const website = formData.get('website') as string
