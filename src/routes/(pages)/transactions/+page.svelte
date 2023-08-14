@@ -1,21 +1,20 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { format as dateFormat, startOfMonth } from 'date-fns';
-
-	import DataTable from '$lib/table/DataTable.svelte';
-	import type { LiftedTransaction } from '../../api/transactions/+server';
-	import Heading from '$lib/Heading.svelte';
-	import AmountCell from '$lib/table/AmountCell.svelte';
-	import DateInput from '$lib/inputs/DateInput.svelte';
-	import Button from '$lib/Button.svelte';
-	import CategoryCell from '$lib/table/CategoryCell.svelte';
-	import type { Account, Category } from '@prisma/client';
-	import TransactionInsights from './TransactionInsights.svelte';
-	import NewTransactionPanel from './NewTransactionPanel.svelte';
 	import Icon from '@iconify/svelte';
-	import Selectable from '$lib/Selectable.svelte';
+	import { format as dateFormat, startOfMonth } from 'date-fns';
+	import { onMount } from 'svelte';
+
+	import Button from '$lib/Button.svelte';
 	import CategoryTag from '$lib/CategoryTag.svelte';
 	import Drawer from '$lib/Drawer.svelte';
+	import Heading from '$lib/Heading.svelte';
+	import Selectable from '$lib/Selectable.svelte';
+	import DateInput from '$lib/inputs/DateInput.svelte';
+	import AmountCell from '$lib/table/AmountCell.svelte';
+	import CategoryCell from '$lib/table/CategoryCell.svelte';
+	import DataTable from '$lib/table/DataTable.svelte';
+	import type { Account, Category, LiftedTransaction } from '$lib/types';
+	import NewTransactionPanel from './NewTransactionPanel.svelte';
+	import TransactionInsights from './TransactionInsights.svelte';
 
 	let transactions: LiftedTransaction[] = [];
 	let selectedStartDate: Date | null = startOfMonth(new Date('2023-07-02'));
@@ -35,10 +34,13 @@
 
 		const response = await fetch(queryPath);
 		const data = await response.json();
+
+		console.log(data);
+
 		transactions = data.filter(
 			(transaction: LiftedTransaction) =>
-				selectedCategories.includes(transaction.categoryId) &&
-				selectedAccounts.includes(transaction.accountId)
+				selectedCategories.includes(transaction.category_id) &&
+				selectedAccounts.includes(transaction.account_id)
 		);
 	}
 
@@ -130,7 +132,7 @@
 	const columns = [
 		{
 			header: 'Date',
-			accessorKey: 'recordedAt',
+			accessorKey: 'posted_at',
 			cell: (info) => {
 				const date = new Date(info.getValue());
 

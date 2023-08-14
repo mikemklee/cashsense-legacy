@@ -11,7 +11,7 @@
 		type ColumnSort,
 		type Row
 	} from '@tanstack/svelte-table';
-	import type { Account, Transaction } from '@prisma/client';
+	import type { Account, Transaction } from '$lib/types';
 	import Icon from '@iconify/svelte';
 
 	type Models = Transaction | Account;

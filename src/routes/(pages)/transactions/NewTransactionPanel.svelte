@@ -1,16 +1,15 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import { onMount } from 'svelte';
 	import { format } from 'date-fns';
-	import type { Account, Category } from '@prisma/client';
+	import { onMount } from 'svelte';
 
-	import DateInput from '$lib/inputs/DateInput.svelte';
 	import Button from '$lib/Button.svelte';
-	import SelectInput, { type Option } from '$lib/inputs/SelectInput.svelte';
-	import TextInput from '$lib/inputs/TextInput.svelte';
-	import NumberInput from '$lib/inputs/NumberInput.svelte';
 	import Collapsible from '$lib/Collapsible.svelte';
 	import Heading from '$lib/Heading.svelte';
+	import DateInput from '$lib/inputs/DateInput.svelte';
+	import NumberInput from '$lib/inputs/NumberInput.svelte';
+	import SelectInput, { type Option } from '$lib/inputs/SelectInput.svelte';
+	import TextInput from '$lib/inputs/TextInput.svelte';
 
 	export let showPanel: boolean;
 	export let onClose = () => {};
@@ -64,11 +63,11 @@
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				recordedAt: new Date(selectedDate),
+				posted_at: new Date(selectedDate),
 				description: enteredDescription,
 				amount: centsWithDirection,
-				categoryId: selectedCategory,
-				accountId: selectedAccount
+				category_id: selectedCategory,
+				account_id: selectedAccount
 			})
 		});
 

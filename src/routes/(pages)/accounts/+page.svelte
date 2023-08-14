@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { Account } from '@prisma/client';
 	import Icon from '@iconify/svelte';
+	import { onMount } from 'svelte';
 
 	import Button from '$lib/Button.svelte';
-	import { onMount } from 'svelte';
 	import Heading from '$lib/Heading.svelte';
+	import type { Account } from '$lib/types';
 	import NewAccountModal from './NewAccountModal.svelte';
 
 	let accounts: Account[] = [];

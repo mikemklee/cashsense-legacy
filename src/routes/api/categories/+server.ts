@@ -1,10 +1,10 @@
 
-import prisma from '$lib/prisma';
 import { error, json } from '@sveltejs/kit';
 
 export async function POST({ request }) {
   const { name, color } = await request.json();
 
+  // FIXME: use supabase
   const category = await prisma.category.create({
     data: {
       name,
@@ -19,6 +19,7 @@ export async function POST({ request }) {
 export async function PATCH({ request }) {
   const { id, name, color } = await request.json();
 
+  // FIXME: use supabase
   const category = await prisma.category.update({
     where: {
       id: Number(id)
@@ -32,8 +33,11 @@ export async function PATCH({ request }) {
   return json(category)
 }
 
-export async function GET() {
-  const categories = await prisma.category.findMany();
+export async function GET({ locals: { supabase } }) {
+
+  const { data: categories } = await supabase
+    .from('categories')
+    .select(`*`)
 
   return json(categories)
 }
@@ -45,6 +49,7 @@ export async function DELETE({ url }) {
     throw error(400, 'Missing category ID');
   }
 
+  // FIXME: use supabase
   await prisma.category.delete({
     where: {
       id: Number(categoryId)

@@ -1,10 +1,9 @@
 <script lang="ts">
-	import type { Category } from '@prisma/client';
-
 	import Button from '$lib/Button.svelte';
 	import Modal from '$lib/Modal.svelte';
-	import TextInput from '$lib/inputs/TextInput.svelte';
 	import ColorInput from '$lib/inputs/ColorInput.svelte';
+	import TextInput from '$lib/inputs/TextInput.svelte';
+	import type { Category } from '$lib/types';
 
 	export let record: Category;
 	export let showModal: boolean;

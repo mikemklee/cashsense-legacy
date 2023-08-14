@@ -1,10 +1,10 @@
 
-import prisma from '$lib/prisma';
 import { error, json } from '@sveltejs/kit';
 
 export async function POST({ request }) {
   const { name, type } = await request.json();
 
+  // FIXME: use supabase
   const account = await prisma.account.create({
     data: {
       name: name,
@@ -16,8 +16,10 @@ export async function POST({ request }) {
   return json(account)
 }
 
-export async function GET() {
-  const accounts = await prisma.account.findMany()
+export async function GET({ locals: { supabase } }) {
+  const { data: accounts } = await supabase
+    .from('accounts')
+    .select(`*`)
 
   return json(accounts)
 }
@@ -29,6 +31,7 @@ export async function DELETE({ url }) {
     throw error(400, 'Missing account ID');
   }
 
+  // FIXME: use supabase
   await prisma.account.delete({
     where: {
       id: Number(accountId)
