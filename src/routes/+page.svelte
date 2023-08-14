@@ -9,15 +9,13 @@
 	<title>Cashsense</title>
 </svelte:head>
 
-<div class="row flex-center flex">
-	<div class="col-6 form-widget">
-		<Auth
-			supabaseClient={data.supabase}
-			view="magic_link"
-			redirectTo={`${data.url}/auth/callback`}
-			showLinks={false}
-			appearance={{ theme: ThemeSupa, style: { input: 'color: #fff' } }}
-			additionalData={{}}
-		/>
-	</div>
+<div class="flex flex-col mx-auto justify-center max-w-sm p-12">
+	<h1 class="text-center text-2xl">Login</h1>
+	<Auth
+		supabaseClient={data.supabase}
+		providers={['google']}
+		redirectTo={`${data.url}/auth/callback`}
+		appearance={{ theme: ThemeSupa, style: { input: 'color: #fff' } }}
+		additionalData={{}}
+	/>
 </div>
