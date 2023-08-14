@@ -1,6 +1,6 @@
 <script lang="ts">
 	import avatar from '$lib/assets/avatar.jpg';
-	export let url: string = avatar;
+	export let url: string | undefined | null = avatar;
 	export let size: number;
 </script>
 

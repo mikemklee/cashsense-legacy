@@ -4,7 +4,6 @@
 	import type { Profile } from '$lib/types';
 	import Avatar from './Avatar.svelte';
 
-	export let onLogout: Function;
 	export let profile: Profile | null;
 
 	let isMenuOpen = false;
@@ -14,9 +13,11 @@
 		goto('/profile');
 	}
 
-	function handleLogout() {
+	async function handleLogout() {
 		isMenuOpen = false;
-		onLogout();
+		await fetch('/api/auth/signout', {
+			method: 'POST'
+		});
 	}
 
 	$: pathname = $page.url.pathname;
@@ -45,9 +46,9 @@
 		</a>
 	</div>
 
-	<div class="ml-auto pr-6">
+	<div class="ml-auto pr-2 flex items-center">
 		<button on:click={() => (isMenuOpen = !isMenuOpen)} id="usermenu-toggle">
-			<Avatar size={32} />
+			<Avatar url={profile?.avatar_url} size={32} />
 		</button>
 
 		{#if isMenuOpen}
@@ -55,14 +56,20 @@
 				id="usermenu"
 				class="absolute right-[2rem] top-[4rem] bg-gray-800 border border-gray-600 rounded-md shadow-lg z-10"
 			>
-				<div class="px-4 py-2 flex flex-col border-b border-gray-200">
+				<div class="px-4 py-4 flex flex-col border-b border-gray-600">
 					<span class="font-semibold">{profile?.full_name}</span>
-					<span class="text-sm">{profile?.username}</span>
+					<span class="text-sm">{profile?.email}</span>
 				</div>
 
 				<div class="flex flex-col">
-					<button on:click={goToProfile}>My profile</button>
-					<button on:click={handleLogout}>Sign out</button>
+					<button
+						class="text-left px-4 py-2 hover:bg-gray-600 transition-colors cursor-pointer border-b border-gray-700"
+						on:click={goToProfile}>My profile</button
+					>
+					<button
+						class="text-left px-4 py-2 hover:bg-gray-600 transition-colors cursor-pointer"
+						on:click={handleLogout}>Sign out</button
+					>
 				</div>
 			</div>
 		{/if}

@@ -6,5 +6,6 @@ export const POST = async ({ locals: { supabase, getSession } }) => {
   if (!session) return json('No session');
 
   await supabase.auth.signOut()
+
   throw redirect(303, '/')
 }

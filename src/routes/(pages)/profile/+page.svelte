@@ -8,15 +8,14 @@
 	export let data;
 	export let form;
 
-	let { session, supabase, profile } = data;
-	$: ({ session, supabase, profile } = data);
+	let { session, profile } = data;
+	$: ({ session, profile } = data);
 
 	let profileForm: HTMLFormElement;
 	let loading = false;
 	let fullName: string = profile?.full_name ?? '';
 	let username: string = profile?.username ?? '';
 	let website: string = profile?.website ?? '';
-	let avatarUrl: string = profile?.avatar_url ?? '';
 
 	const handleSubmit: SubmitFunction = () => {
 		loading = true;
@@ -24,23 +23,16 @@
 			loading = false;
 		};
 	};
-
-	const handleSignOut: SubmitFunction = () => {
-		loading = true;
-		return async ({ update }) => {
-			loading = false;
-			update();
-		};
-	};
 </script>
 
-<div class="form-widget">
+<div class="flex flex-col mx-auto justify-center max-w-md p-12">
+	<h1 class="text-2xl mb-4">My profile</h1>
 	<form
-		class="form-widget"
 		method="post"
 		action="?/update"
 		use:enhance={handleSubmit}
 		bind:this={profileForm}
+		class="flex flex-col gap-4"
 	>
 		<TextInput id="email" label="Email" bind:value={session.user.email} isDisabled />
 		<TextInput id="fullName" label="Full Name" value={form?.fullName ?? fullName} />
@@ -48,9 +40,5 @@
 		<TextInput id="website" label="Website" value={form?.website ?? website} />
 
 		<Button type="submit" text={loading ? 'Loading...' : 'Update'} isDisabled={loading} />
-	</form>
-
-	<form method="post" action="?/signout" use:enhance={handleSignOut}>
-		<Button type="submit" text="Sign out" isDisabled={loading} style="outline" />
 	</form>
 </div>

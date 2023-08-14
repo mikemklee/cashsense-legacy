@@ -21,12 +21,6 @@
 
 		return () => data.subscription.unsubscribe();
 	});
-
-	async function handleLogout() {
-		await fetch('/auth/signout', {
-			method: 'POST'
-		});
-	}
 </script>
 
 <svelte:head>
@@ -34,7 +28,7 @@
 </svelte:head>
 
 <main class="grow flex flex-col bg-gray-800">
-	<Navbar {profile} onLogout={handleLogout} />
+	<Navbar {profile} />
 	<div class="w-full h-full">
 		<slot />
 	</div>
