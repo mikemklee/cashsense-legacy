@@ -1,32 +1,30 @@
 <script lang="ts">
-	import '@fontsource-variable/outfit';
 	import '@fontsource-variable/inter';
-	
-	import { invalidate } from '$app/navigation'
-	import { onMount } from 'svelte'
+	import '@fontsource-variable/outfit';
+	import { onMount } from 'svelte';
 
-	import '../app.css';
+	import { invalidate } from '$app/navigation';
 	import Navbar from '$lib/Navbar.svelte';
+	import '../app.css';
 
+	export let data;
 
-	export let data
-
-	let { supabase, session } = data
-	$: ({ supabase, session } = data)
+	let { supabase, session } = data;
+	$: ({ supabase, session } = data);
 
 	onMount(() => {
 		const { data } = supabase.auth.onAuthStateChange((event, _session) => {
 			if (_session?.expires_at !== session?.expires_at) {
-				invalidate('supabase:auth')
+				invalidate('supabase:auth');
 			}
-		})
+		});
 
-		return () => data.subscription.unsubscribe()
-	})
+		return () => data.subscription.unsubscribe();
+	});
 </script>
 
 <svelte:head>
-	<title>User Management</title>
+	<title>Cashsense</title>
 </svelte:head>
 
 <main class="grow flex flex-col bg-gray-800">

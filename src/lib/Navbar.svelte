@@ -5,7 +5,7 @@
 </script>
 
 <nav class="w-full max-h-16 bg-gray-800 border-b border-b-gray-700 flex items-center px-6 py-3">
-	<a href="/" class="text-2xl font-semibold mr-8 mt-[-2px]"> cashflow </a>
+	<a href="/" class="text-2xl font-semibold mr-8 mt-[-2px]"> cashsense </a>
 	<div class="flex gap-x-8">
 		<a
 			href="/transactions"
