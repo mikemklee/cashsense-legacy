@@ -1,9 +1,13 @@
 <script lang="ts">
-	import '../styles.css'
+	import '@fontsource-variable/outfit';
+	import '@fontsource-variable/inter';
+	
 	import { invalidate } from '$app/navigation'
 	import { onMount } from 'svelte'
 
 	import '../app.css';
+	import Navbar from '$lib/Navbar.svelte';
+
 
 	export let data
 
@@ -25,6 +29,18 @@
 	<title>User Management</title>
 </svelte:head>
 
-<div class="container" style="padding: 50px 0 100px 0">
-	<slot />
-</div>
+<main class="grow flex flex-col bg-gray-800">
+	<Navbar />
+	<div class="w-full h-full">
+		<slot />
+	</div>
+</main>
+
+<style>
+	:global(body) {
+		font-family: 'Outfit Variable', sans-serif;
+		/* font-family: 'Inter Variable', sans-serif; */
+		color: #d7d7d7;
+		overflow-x: hidden;
+	}
+</style>
