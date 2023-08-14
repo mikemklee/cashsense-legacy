@@ -1,12 +1,13 @@
 <script lang="ts">
-	export let url: string;
+	import avatar from '$lib/assets/avatar.jpg';
+	export let url: string = avatar;
 	export let size: number;
 </script>
 
 <div>
-	{#if url}
-		<img src={url} width={size} height={size} alt="Avatar" class="rounded" />
+	<img src={url} width={size} height={size} alt="Avatar" class="rounded" />
+	<!-- {#if url}
 	{:else}
 		<div style="height: {size}px; width: {size}px" />
-	{/if}
+	{/if} -->
 </div>

@@ -1,5 +1,23 @@
-<script>
+<script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import type { Profile } from '$lib/types';
+	import Avatar from './Avatar.svelte';
+
+	export let onLogout: Function;
+	export let profile: Profile | null;
+
+	let isMenuOpen = false;
+
+	function goToProfile() {
+		isMenuOpen = false;
+		goto('/profile');
+	}
+
+	function handleLogout() {
+		isMenuOpen = false;
+		onLogout();
+	}
 
 	$: pathname = $page.url.pathname;
 </script>
@@ -25,5 +43,28 @@
 		>
 			Categories
 		</a>
+	</div>
+
+	<div class="ml-auto pr-6">
+		<button on:click={() => (isMenuOpen = !isMenuOpen)} id="usermenu-toggle">
+			<Avatar size={32} />
+		</button>
+
+		{#if isMenuOpen}
+			<div
+				id="usermenu"
+				class="absolute right-[2rem] top-[4rem] bg-gray-800 border border-gray-600 rounded-md shadow-lg z-10"
+			>
+				<div class="px-4 py-2 flex flex-col border-b border-gray-200">
+					<span class="font-semibold">{profile?.full_name}</span>
+					<span class="text-sm">{profile?.username}</span>
+				</div>
+
+				<div class="flex flex-col">
+					<button on:click={goToProfile}>My profile</button>
+					<button on:click={handleLogout}>Sign out</button>
+				</div>
+			</div>
+		{/if}
 	</div>
 </nav>
