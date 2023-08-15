@@ -198,10 +198,10 @@
 				<DateInput label="To" bind:value={formattedEndDate} onChange={fetchTransactions} />
 			</div>
 
-			{#if categories.length > 0}
-				<div class="mt-6">
-					<Heading size="md">Categories</Heading>
+			<div class="mt-6">
+				<Heading size="md">Categories</Heading>
 
+				{#if categories.length > 0}
 					<div class="my-2 flex flex-wrap gap-2">
 						{#each categories as category}
 							<Selectable
@@ -229,8 +229,21 @@
 							>
 						{/if}
 					</div>
-				</div>
-			{/if}
+				{:else}
+					<div class="text-sm text-gray-400">
+						<span>You don't have any categories yet.</span>
+						<span class="flex items-center">
+							<a
+								href="/categories"
+								class="text-indigo-400 hover:text-indigo-300 transition-colors flex items-center"
+							>
+								Add one here
+								<Icon icon="tabler:arrow-right" class="inline-block text-lg" />
+							</a>
+						</span>
+					</div>
+				{/if}
+			</div>
 
 			{#if accounts.length > 0}
 				<div class="mt-6">
