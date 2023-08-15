@@ -245,10 +245,10 @@
 				{/if}
 			</div>
 
-			{#if accounts.length > 0}
-				<div class="mt-6">
-					<Heading size="md">Accounts</Heading>
+			<div class="mt-6">
+				<Heading size="md">Accounts</Heading>
 
+				{#if accounts.length > 0}
 					<div class="my-2 flex flex-col gap-2">
 						{#each accounts as account}
 							<Selectable
@@ -288,8 +288,21 @@
 							>
 						{/if}
 					</div>
-				</div>
-			{/if}
+				{:else}
+					<div class="text-sm text-gray-400">
+						<span>You don't have any accounts yet.</span>
+						<span class="flex items-center">
+							<a
+								href="/accounts"
+								class="text-indigo-400 hover:text-indigo-300 transition-colors flex items-center"
+							>
+								Add one here
+								<Icon icon="tabler:arrow-right" class="inline-block text-lg" />
+							</a>
+						</span>
+					</div>
+				{/if}
+			</div>
 		</div>
 	</section>
 
