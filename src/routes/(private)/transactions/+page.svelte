@@ -333,6 +333,10 @@
 						handleRowSelect={onSelectTransaction}
 					/>
 				</div>
+			{:else}
+				<div class="text-gray-400 text-center mt-40">
+					<span>You don't have any transactions recorded yet.</span>
+				</div>
 			{/if}
 		</section>
 	</div>

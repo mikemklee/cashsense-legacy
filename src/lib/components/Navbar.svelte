@@ -48,16 +48,16 @@
 			Transactions
 		</a>
 		<a
-			href="/accounts"
-			class="transition-opacity {pathname === '/accounts' ? 'opacity-100' : 'opacity-50'}"
-		>
-			Accounts
-		</a>
-		<a
 			href="/categories"
 			class="transition-opacity {pathname === '/categories' ? 'opacity-100' : 'opacity-50'}"
 		>
 			Categories
+		</a>
+		<a
+			href="/accounts"
+			class="transition-opacity {pathname === '/accounts' ? 'opacity-100' : 'opacity-50'}"
+		>
+			Accounts
 		</a>
 	</div>
 
