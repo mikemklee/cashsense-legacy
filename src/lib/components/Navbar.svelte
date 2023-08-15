@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import type { Profile } from '$lib/types';
+
 	import Avatar from './Avatar.svelte';
 
 	export let profile: Profile | null;
@@ -22,6 +23,19 @@
 	}
 
 	$: pathname = $page.url.pathname;
+
+	function handleMenuOpen() {
+		if (isMenuOpen) {
+			handleMenuClose();
+		} else {
+			isMenuOpen = true;
+			document.body.addEventListener('click', handleMenuClose);
+		}
+	}
+	function handleMenuClose() {
+		isMenuOpen = false;
+		document.body.removeEventListener('click', handleMenuClose);
+	}
 </script>
 
 <nav class="w-full max-h-16 bg-gray-800 border-b border-b-gray-700 flex items-center px-6 py-3">
@@ -48,12 +62,13 @@
 	</div>
 
 	<div class="ml-auto pr-2 flex items-center">
-		<button on:click={() => (isMenuOpen = !isMenuOpen)} id="usermenu-toggle">
+		<button on:click|stopPropagation={handleMenuOpen} id="usermenu-toggle">
 			<Avatar url={profile?.avatar_url} size={32} />
 		</button>
 
 		{#if isMenuOpen}
 			<div
+				on:click|stopPropagation
 				id="usermenu"
 				class="absolute right-[2rem] top-[4rem] bg-gray-800 border border-gray-600 rounded-md shadow-lg z-10"
 			>
