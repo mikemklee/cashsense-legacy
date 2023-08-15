@@ -4,13 +4,11 @@
 	import { onMount } from 'svelte';
 
 	import { invalidate } from '$app/navigation';
-	import Navbar from '$lib/components/Navbar.svelte';
 	import '../app.css';
 
 	export let data;
 
-	let { supabase, session, profile } = data;
-	$: ({ supabase, session, profile } = data);
+	$: ({ supabase, session } = data);
 
 	onMount(() => {
 		const { data } = supabase.auth.onAuthStateChange((event, _session) => {
@@ -28,9 +26,6 @@
 </svelte:head>
 
 <main class="grow flex flex-col bg-gray-800">
-	{#if session}
-		<Navbar {profile} />
-	{/if}
 	<div class="w-full h-full">
 		<slot />
 	</div>
