@@ -25,17 +25,8 @@
 	<title>Cashsense</title>
 </svelte:head>
 
-<main class="grow flex flex-col bg-gray-800">
+<main class="grow flex flex-col">
 	<div class="w-full h-full">
 		<slot />
 	</div>
 </main>
-
-<style>
-	:global(body) {
-		font-family: 'Outfit Variable', sans-serif;
-		/* font-family: 'Inter Variable', sans-serif; */
-		color: #d7d7d7;
-		overflow-x: hidden;
-	}
-</style>
