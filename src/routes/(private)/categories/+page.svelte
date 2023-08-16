@@ -48,7 +48,7 @@
 <div class="flex h-full">
 	<!-- Side -->
 	<section class="border-r border-r-gray-700 w-[380px]">
-		<div class="p-6 flex items-center justify-between">
+		<div class="p-6 border-b border-b-gray-700 flex items-center justify-between">
 			<Heading isSnug>Categories</Heading>
 			<Button text="New category" onClick={() => (showNewRecordModal = true)} />
 		</div>
@@ -57,6 +57,7 @@
 			<div class="flex flex-col">
 				{#each categories as category}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<!-- svelte-ignore a11y-no-static-element-interactions -->
 					<div
 						class="border-y border-gray-700 px-6 py-4
 						flex items-center
@@ -76,6 +77,10 @@
 						</div>
 					</div>
 				{/each}
+			</div>
+		{:else}
+			<div class="text-gray-400 text-center mt-10">
+				<span>You don't have any categories yet.</span>
 			</div>
 		{/if}
 	</section>

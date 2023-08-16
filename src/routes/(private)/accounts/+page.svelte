@@ -60,6 +60,7 @@
 			<div class="flex flex-col">
 				{#each accounts as account}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<!-- svelte-ignore a11y-no-static-element-interactions -->
 					<div
 						class="border-y border-gray-700 px-6 py-4
 							flex items-center
@@ -78,6 +79,10 @@
 						</div>
 					</div>
 				{/each}
+			</div>
+		{:else}
+			<div class="text-gray-400 text-center mt-10">
+				<span>You don't have any accounts yet.</span>
 			</div>
 		{/if}
 	</section>

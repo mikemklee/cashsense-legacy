@@ -334,7 +334,7 @@
 					/>
 				</div>
 			{:else}
-				<div class="text-gray-400 text-center mt-40">
+				<div class="text-gray-400 text-center mt-20">
 					<span>You don't have any transactions recorded yet.</span>
 				</div>
 			{/if}
