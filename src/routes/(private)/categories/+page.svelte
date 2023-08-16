@@ -23,7 +23,7 @@
 		if (categories.length > 0) selectedRecord = categories[0];
 	}
 
-	async function onDelete(accountId: number) {
+	async function onDelete(accountId: string) {
 		await fetch(`/api/categories?id=${accountId}`, {
 			method: 'DELETE'
 		});

@@ -12,7 +12,7 @@ export interface Database {
       accounts: {
         Row: {
           created_at: string
-          id: number
+          id: string
           name: string
           profile_id: string
           type: string
@@ -20,7 +20,7 @@ export interface Database {
         }
         Insert: {
           created_at?: string
-          id?: number
+          id?: string
           name: string
           profile_id: string
           type: string
@@ -28,7 +28,7 @@ export interface Database {
         }
         Update: {
           created_at?: string
-          id?: number
+          id?: string
           name?: string
           profile_id?: string
           type?: string
@@ -47,7 +47,7 @@ export interface Database {
         Row: {
           color: string
           created_at: string
-          id: number
+          id: string
           name: string
           profile_id: string
           updated_at: string
@@ -55,7 +55,7 @@ export interface Database {
         Insert: {
           color: string
           created_at?: string
-          id?: number
+          id?: string
           name: string
           profile_id: string
           updated_at?: string
@@ -63,7 +63,7 @@ export interface Database {
         Update: {
           color?: string
           created_at?: string
-          id?: number
+          id?: string
           name?: string
           profile_id?: string
           updated_at?: string
@@ -116,34 +116,34 @@ export interface Database {
       }
       transactions: {
         Row: {
-          account_id: number
+          account_id: string
           amount: number
-          category_id: number
+          category_id: string
           created_at: string
           description: string
-          id: number
+          id: string
           posted_at: string
           profile_id: string
           updated_at: string
         }
         Insert: {
-          account_id: number
+          account_id: string
           amount: number
-          category_id: number
+          category_id: string
           created_at?: string
           description: string
-          id?: number
+          id?: string
           posted_at: string
           profile_id: string
           updated_at?: string
         }
         Update: {
-          account_id?: number
+          account_id?: string
           amount?: number
-          category_id?: number
+          category_id?: string
           created_at?: string
           description?: string
-          id?: number
+          id?: string
           posted_at?: string
           profile_id?: string
           updated_at?: string

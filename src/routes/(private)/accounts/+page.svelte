@@ -27,7 +27,7 @@
 		selectedAccount = account;
 	}
 
-	async function onDeleteAccount(accountId?: number) {
+	async function onDeleteAccount(accountId?: string) {
 		if (!accountId) return;
 		await fetch(`/api/accounts?id=${accountId}`, {
 			method: 'DELETE'
