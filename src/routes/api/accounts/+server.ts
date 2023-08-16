@@ -1,16 +1,19 @@
 
 import { error, json } from '@sveltejs/kit';
 
-export async function POST({ request }) {
+export async function POST({ request, locals: { supabase, getSession } }) {
+  const session = await getSession()
+
+  if (!session) {
+    throw error(401, 'Unauthorized');
+  }
+
   const { name, type } = await request.json();
 
-  // FIXME: use supabase
-  const account = await prisma.account.create({
-    data: {
-      name: name,
-      type: type,
-      userId: 1,
-    }
+  const account = await supabase.from('accounts').insert({
+    name: name,
+    type: type,
+    profile_id: session?.user.id,
   })
 
   return json(account)
@@ -24,19 +27,24 @@ export async function GET({ locals: { supabase } }) {
   return json(accounts)
 }
 
-export async function DELETE({ url }) {
+export async function DELETE({ url, locals: { supabase, getSession } }) {
+  const session = await getSession()
+
+  if (!session) {
+    throw error(401, 'Unauthorized');
+  }
+
+
   const accountId = url.searchParams.get('id')
 
   if (!accountId) {
     throw error(400, 'Missing account ID');
   }
 
-  // FIXME: use supabase
-  await prisma.account.delete({
-    where: {
-      id: Number(accountId)
-    }
-  })
+  await supabase.from('accounts')
+    .delete()
+    .eq('id', Number(accountId))
+    .eq('profile_id', session?.user.id)
 
   return json('Account deleted')
 }
