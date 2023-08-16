@@ -10,6 +10,7 @@
 	import NumberInput from '$lib/components/inputs/NumberInput.svelte';
 	import SelectInput, { type Option } from '$lib/components/inputs/SelectInput.svelte';
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
+	import type { Account, Category } from '$lib/types';
 
 	export let showPanel: boolean;
 	export let onClose = () => {};

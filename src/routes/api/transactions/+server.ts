@@ -1,15 +1,34 @@
 
 import { error, json } from '@sveltejs/kit';
+import { v4 as uuid } from 'uuid';
 
 import type { LiftedTransaction } from '$lib/types';
 
-export async function POST({ request }) {
-  const data = await request.json();
+export async function POST({ request, locals: { supabase, getSession } }) {
+  const session = await getSession()
+  if (!session) {
+    throw error(401, 'Unauthorized');
+  }
 
-  // FIXME: use supabase
-  const transaction = await prisma.transaction.create({ data })
+  const requestData = await request.json();
 
-  return json(transaction)
+  const {
+    data,
+    error: insertError,
+    status: statusCode,
+  } = await supabase
+    .from('transactions')
+    .insert({
+      ...requestData,
+      id: uuid(),
+      profile_id: session.user.id,
+    })
+
+  if (insertError) {
+    throw error(statusCode, 'Unexpected error while adding new transaction')
+  } else {
+    return json(data)
+  }
 }
 
 export async function GET({ url, locals: { supabase } }) {
@@ -58,19 +77,29 @@ export async function GET({ url, locals: { supabase } }) {
   return json(transactions)
 }
 
-export async function DELETE({ url }) {
+export async function DELETE({ url, locals: { supabase, getSession } }) {
+  const session = await getSession()
+  if (!session) {
+    throw error(401, 'Unauthorized');
+  }
+
   const transactionId = url.searchParams.get('id')
 
   if (!transactionId) {
     throw error(400, 'Missing transaction ID');
   }
 
-  // FIXME: use supabase
-  await prisma.transaction.delete({
-    where: {
-      id: Number(transactionId)
-    }
-  })
+  const {
+    error: deleteError,
+    status: statusCode,
+  } = await supabase.from('transactions')
+    .delete()
+    .eq('id', transactionId)
+    .eq('profile_id', session.user.id)
 
-  return json('Transaction deleted')
+  if (deleteError) {
+    throw error(statusCode, 'Unexpected error while deleting transaction')
+  } else {
+    return json('Transaction deleted')
+  }
 }

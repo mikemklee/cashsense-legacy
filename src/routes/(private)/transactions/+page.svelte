@@ -42,7 +42,7 @@
 		);
 	}
 
-	async function onDelete(transactionId: number) {
+	async function onDelete(transactionId: string) {
 		await fetch(`/api/transactions?id=${transactionId}`, {
 			method: 'DELETE'
 		});
@@ -59,7 +59,7 @@
 	}
 
 	let accounts: Account[] = [];
-	let selectedAccounts: number[] = [];
+	let selectedAccounts: string[] = [];
 
 	async function fetchAccounts() {
 		const response = await fetch('/api/accounts');
@@ -68,7 +68,7 @@
 		selectedAccounts = data.map((account: Account) => account.id);
 	}
 
-	async function onSelectAccountFilterItem(accountId: number) {
+	async function onSelectAccountFilterItem(accountId: string) {
 		if (selectedAccounts.includes(accountId)) {
 			selectedAccounts = selectedAccounts.filter((id) => id !== accountId);
 		} else {
@@ -89,7 +89,7 @@
 	}
 
 	let categories: Category[] = [];
-	let selectedCategories: number[] = [];
+	let selectedCategories: string[] = [];
 
 	async function fetchCategories() {
 		const response = await fetch('/api/categories');
@@ -98,10 +98,10 @@
 		categories = data;
 		selectedCategories = data
 			.map((category: Category) => category.id)
-			.filter((id: number) => id !== 3);
+			.filter((id: string) => id !== '9723abaa-de74-468e-bb77-62235cf2ea0b');
 	}
 
-	async function onSelectCategoryFilterItem(categoryId: number) {
+	async function onSelectCategoryFilterItem(categoryId: string) {
 		if (selectedCategories.includes(categoryId)) {
 			selectedCategories = selectedCategories.filter((id) => id !== categoryId);
 		} else {

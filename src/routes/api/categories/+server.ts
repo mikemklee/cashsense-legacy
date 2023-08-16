@@ -19,7 +19,7 @@ export async function POST({ request, locals: { supabase, getSession } }) {
       id: uuid(),
       name,
       color,
-      profile_id: session?.user.id,
+      profile_id: session.user.id,
     })
 
   if (insertError) {
@@ -48,7 +48,7 @@ export async function PATCH({ request, locals: { supabase, getSession } }) {
       color,
     })
     .eq('id', id)
-    .eq('profile_id', session?.user.id)
+    .eq('profile_id', session.user.id)
 
   if (updateError) {
     throw error(statusCode, 'Unexpected error while updating category')
@@ -84,12 +84,11 @@ export async function DELETE({ url, locals: { supabase, getSession } }) {
   } = await supabase.from('categories')
     .delete()
     .eq('id', categoryId)
-    .eq('profile_id', session?.user.id)
+    .eq('profile_id', session.user.id)
 
   if (deleteError) {
     throw error(statusCode, 'Unexpected error while deleting category')
   } else {
     return json('Category deleted')
   }
-
 }
