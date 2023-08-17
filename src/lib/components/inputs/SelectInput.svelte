@@ -6,10 +6,21 @@
 </script>
 
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	export let label = '';
 	export let options: Option[] = [];
 	export let value = '';
 	export let isRequired = false;
+	export let defaultValue = '';
+
+	onMount(() => {
+		if (defaultValue) {
+			value = defaultValue;
+		} else {
+			value = options[0].value;
+		}
+	});
 </script>
 
 <div class="flex flex-col">
