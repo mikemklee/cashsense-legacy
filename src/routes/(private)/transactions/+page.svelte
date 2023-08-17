@@ -3,8 +3,10 @@
 	import { format as dateFormat, startOfMonth } from 'date-fns';
 	import { onMount } from 'svelte';
 
+	import AmountSpan from '$lib/components/AmountSpan.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import CategoryTag from '$lib/components/CategoryTag.svelte';
+	import DateSpan from '$lib/components/DateSpan.svelte';
 	import Drawer from '$lib/components/Drawer.svelte';
 	import Heading from '$lib/components/Heading.svelte';
 	import Selectable from '$lib/components/Selectable.svelte';
@@ -12,6 +14,7 @@
 	import AmountCell from '$lib/components/table/AmountCell.svelte';
 	import CategoryCell from '$lib/components/table/CategoryCell.svelte';
 	import DataTable from '$lib/components/table/DataTable.svelte';
+	import DateCell from '$lib/components/table/DateCell.svelte';
 	import type { Account, Category, LiftedTransaction } from '$lib/types';
 	import NewTransactionPanel from './NewTransactionPanel.svelte';
 	import TransactionInsights from './TransactionInsights.svelte';
@@ -42,13 +45,14 @@
 		);
 	}
 
-	async function onDelete(transactionId: string) {
+	const onDeleteTransaction = async (transactionId?: string) => {
 		await fetch(`/api/transactions?id=${transactionId}`, {
 			method: 'DELETE'
 		});
 
+		onDeselectTransaction();
 		await fetchTransactions();
-	}
+	};
 
 	function onSelectTransaction(transaction: LiftedTransaction | null) {
 		selectedTransaction = transaction;
@@ -131,15 +135,7 @@
 		{
 			header: 'Date',
 			accessorKey: 'posted_at',
-			cell: (info) => {
-				const date = new Date(info.getValue());
-
-				const timeMs = date.getTime();
-				const tzOffsetMs = date.getTimezoneOffset() * 60 * 1000;
-				const adjustedTimeMs = timeMs + tzOffsetMs;
-
-				return dateFormat(adjustedTimeMs, 'MMM d, yyyy');
-			}
+			cell: () => DateCell
 		},
 		{
 			header: 'Description',
@@ -170,15 +166,6 @@
 			default:
 				return 'Unknown';
 		}
-	};
-
-	const deleteRecord = async (recordId?: string) => {
-		await fetch(`/api/transactions?id=${recordId}`, {
-			method: 'DELETE'
-		});
-
-		onDeselectTransaction();
-		await fetchTransactions();
 	};
 </script>
 
@@ -325,17 +312,45 @@
 				</button>
 			</div>
 
-			<div class="p-6">
-				<Button
-					text="Delete"
-					style="outline"
-					onClick={() => deleteRecord(selectedTransaction?.id)}
-				/>
-			</div>
+			{#if selectedTransaction}
+				<div class="px-6 mb-4 flex flex-col gap-2">
+					<div>
+						<span class="text-sm text-gray-400">Date</span>
+						<DateSpan value={selectedTransaction.posted_at} />
+					</div>
 
-			<div class="p-6">TODO: Show details here</div>
-			<div class="p-6">TODO: Show picture here</div>
-			<div class="p-6">TODO: Show memo here</div>
+					<div>
+						<span class="text-sm text-gray-400">Description</span>
+						<div>{selectedTransaction.description}</div>
+					</div>
+
+					<div>
+						<span class="text-sm text-gray-400">Category</span>
+						<CategoryTag
+							color={selectedTransaction.category.color}
+							name={selectedTransaction.category.name}
+						/>
+					</div>
+
+					<div>
+						<span class="text-sm text-gray-400">Account</span>
+						<div>{selectedTransaction.account.name}</div>
+					</div>
+
+					<div>
+						<span class="text-sm text-gray-400">Amount</span>
+						<AmountSpan value={selectedTransaction.amount} />
+					</div>
+				</div>
+
+				<div class="flex justify-end px-6">
+					<Button
+						text="Delete"
+						style="outline"
+						onClick={() => onDeleteTransaction(selectedTransaction?.id)}
+					/>
+				</div>
+			{/if}
 		</Drawer>
 		<section class="p-6 pr-12">
 			{#if transactions.length > 0}
