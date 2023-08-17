@@ -39,7 +39,10 @@
 </script>
 
 <nav class="w-full max-h-16 border-b border-b-gray-700 flex items-center px-6 py-3">
-	<a href="/" class="text-2xl font-semibold mr-8 mt-[-2px]"> cashsense </a>
+	<a href="/" class="text-2xl font-semibold mr-2 mt-[-2px] logo">cashsense</a>
+	<span class="font-mono mr-8 text-[10px] rounded border border-gray-300 px-2 py-[2px]">
+		pre-alpha
+	</span>
 	<div class="flex gap-x-8">
 		<a
 			href="/transactions"
@@ -93,3 +96,9 @@
 		{/if}
 	</div>
 </nav>
+
+<style>
+	.logo {
+		font-family: 'Ubuntu Mono', sans-serif;
+	}
+</style>

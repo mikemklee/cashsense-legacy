@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '@fontsource-variable/outfit';
+	import '@fontsource/ubuntu-mono';
 
 	import { onMount } from 'svelte';
 
@@ -22,7 +23,7 @@
 </script>
 
 <svelte:head>
-	<title>Cashsense</title>
+	<title>cashsense</title>
 </svelte:head>
 
 <main class="grow flex flex-col">

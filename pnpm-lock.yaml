@@ -8,6 +8,9 @@ dependencies:
   '@fontsource-variable/outfit':
     specifier: ^5.0.3
     version: 5.0.8
+  '@fontsource/ubuntu-mono':
+    specifier: ^5.0.8
+    version: 5.0.8
   '@supabase/auth-helpers-sveltekit':
     specifier: ^0.10.2
     version: 0.10.2(@supabase/supabase-js@2.32.0)(@sveltejs/kit@1.22.5)
@@ -379,6 +382,10 @@ packages:
 
   /@fontsource-variable/outfit@5.0.8:
     resolution: {integrity: sha512-j4JHCbuk2+Nl7PwTVT+RJKTDMDw7TWWt/85CIucD7KvOS7Iv0IiymE5ur21/aFbTwamOHrXX91WrQZHN7QDrmw==}
+    dev: false
+
+  /@fontsource/ubuntu-mono@5.0.8:
+    resolution: {integrity: sha512-3FGlXw69TgSxZSLhpEnDalAxe1Ae9xRzROjkClxMqSkk0XOl9xSThFot/R2ttNTV84kdQwPWtuJ3QenCBo02uw==}
     dev: false
 
   /@humanwhocodes/config-array@0.11.10:

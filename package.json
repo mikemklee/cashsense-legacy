@@ -44,6 +44,7 @@
 	"type": "module",
 	"dependencies": {
 		"@fontsource-variable/outfit": "^5.0.3",
+		"@fontsource/ubuntu-mono": "^5.0.8",
 		"@supabase/auth-helpers-sveltekit": "^0.10.2",
 		"@supabase/auth-ui-shared": "^0.1.6",
 		"@supabase/auth-ui-svelte": "^0.2.2",
