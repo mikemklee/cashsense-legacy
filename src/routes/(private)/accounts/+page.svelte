@@ -90,13 +90,17 @@
 	<!-- Main -->
 	<section class="flex-grow p-6 pr-12">
 		{#if selectedAccount}
-			<div class="flex items-center gap-x-2 text-xl">{selectedAccount.name}</div>
-			<div class="self-end">
-				<Button
-					text="Delete"
-					onClick={() => onDeleteAccount(selectedAccount?.id)}
-					style="outline"
-				/>
+			<div class="flex items-center gap-x-2">
+				<div class="text-xl">
+					{selectedAccount.name}
+				</div>
+				<div class="ml-auto">
+					<Button
+						text="Delete"
+						onClick={() => onDeleteAccount(selectedAccount?.id)}
+						style="outline"
+					/>
+				</div>
 			</div>
 		{/if}
 	</section>

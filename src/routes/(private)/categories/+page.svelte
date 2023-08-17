@@ -23,7 +23,7 @@
 		if (categories.length > 0) selectedRecord = categories[0];
 	}
 
-	async function onDelete(accountId: string) {
+	async function onDelete(accountId?: string) {
 		await fetch(`/api/categories?id=${accountId}`, {
 			method: 'DELETE'
 		});
@@ -31,7 +31,7 @@
 		fetchCategories();
 	}
 
-	function onEdit(record: Category) {
+	function onEdit(record?: Category) {
 		showEditRecordModal = true;
 		selectedRecord = record;
 	}
@@ -66,15 +66,6 @@
 						on:click={() => onClick(category)}
 					>
 						<CategoryTag color={category.color} name={category.name} />
-
-						<div class="ml-auto flex gap-x-2 text-lg">
-							<button on:click={() => onEdit(category)}>
-								<Icon icon="tabler:edit" />
-							</button>
-							<button on:click={() => onDelete(category.id)}>
-								<Icon icon="tabler:trash" />
-							</button>
-						</div>
 					</div>
 				{/each}
 			</div>
@@ -88,8 +79,14 @@
 	<!-- Main -->
 	<section class="flex-grow p-6 pr-12">
 		{#if selectedRecord}
-			<div class="flex items-center gap-x-2 text-xl">
-				<CategoryTag color={selectedRecord.color} name={selectedRecord.name} />
+			<div class="flex items-center gap-x-2">
+				<div class="text-xl">
+					<CategoryTag color={selectedRecord.color} name={selectedRecord.name} />
+				</div>
+				<div class="ml-auto flex gap-2">
+					<Button text="Edit" onClick={() => onEdit(selectedRecord)} style="outline" />
+					<Button text="Delete" onClick={() => onDelete(selectedRecord?.id)} style="outline" />
+				</div>
 			</div>
 		{/if}
 	</section>
@@ -109,7 +106,6 @@
 		showModal={showEditRecordModal}
 		on:close={() => {
 			showEditRecordModal = false;
-			selectedRecord = undefined;
 		}}
 		onSubmit={() => {
 			fetchCategories();
