@@ -171,6 +171,15 @@
 				return 'Unknown';
 		}
 	};
+
+	const deleteRecord = async (recordId?: string) => {
+		await fetch(`/api/transactions?id=${recordId}`, {
+			method: 'DELETE'
+		});
+
+		onDeselectTransaction();
+		await fetchTransactions();
+	};
 </script>
 
 <div class="flex h-full">
@@ -314,6 +323,14 @@
 				<button on:click={onDeselectTransaction}>
 					<Icon icon="tabler:x" />
 				</button>
+			</div>
+
+			<div class="p-6">
+				<Button
+					text="Delete"
+					style="outline"
+					onClick={() => deleteRecord(selectedTransaction?.id)}
+				/>
 			</div>
 
 			<div class="p-6">TODO: Show details here</div>
