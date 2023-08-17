@@ -180,10 +180,7 @@
 		<NewTransactionPanel
 			showPanel={showCollapsible}
 			onClose={() => (showCollapsible = false)}
-			onSubmit={() => {
-				fetchTransactions();
-				showCollapsible = false;
-			}}
+			onSubmit={fetchTransactions}
 		/>
 
 		<div class="p-6">
