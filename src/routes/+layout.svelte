@@ -6,6 +6,7 @@
 
 	import { invalidate } from '$app/navigation';
 	import '../app.css';
+	import ScrollToTop from '$lib/components/ScrollToTop.svelte';
 
 	export let data;
 
@@ -31,3 +32,5 @@
 		<slot />
 	</div>
 </main>
+
+<ScrollToTop />
