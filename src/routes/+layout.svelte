@@ -1,6 +1,6 @@
 <script lang="ts">
-	import '@fontsource-variable/inter';
 	import '@fontsource-variable/outfit';
+
 	import { onMount } from 'svelte';
 
 	import { invalidate } from '$app/navigation';
