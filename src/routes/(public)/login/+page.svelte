@@ -13,7 +13,13 @@
 
 <div class="flex flex-col mx-auto justify-center max-w-sm p-12 h-full">
 	<div class="text-left">
-		<h1 class="text-3xl logo">cashsense:</h1>
+		<div class="flex items-center">
+			<h1 class="text-3xl logo mr-2 mb-1">cashsense</h1>
+			<span class="font-mono mr-8 text-[10px] rounded border border-gray-300 px-2 py-[2px]">
+				pre-alpha
+			</span>
+		</div>
+
 		<p class="mb-4">Your personal finance copilot.</p>
 	</div>
 
