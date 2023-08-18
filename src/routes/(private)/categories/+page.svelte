@@ -84,8 +84,8 @@
 					<CategoryTag color={selectedRecord.color} name={selectedRecord.name} />
 				</div>
 				<div class="ml-auto flex gap-2">
-					<Button text="Edit" onClick={() => onEdit(selectedRecord)} style="outline" />
-					<Button text="Delete" onClick={() => onDelete(selectedRecord?.id)} style="outline" />
+					<Button text="Edit" onClick={() => onEdit(selectedRecord)} style="secondary" />
+					<Button text="Delete" onClick={() => onDelete(selectedRecord?.id)} style="alert" />
 				</div>
 			</div>
 		{/if}

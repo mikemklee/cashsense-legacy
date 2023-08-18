@@ -98,7 +98,7 @@
 					<Button
 						text="Delete"
 						onClick={() => onDeleteAccount(selectedAccount?.id)}
-						style="outline"
+						style="alert"
 					/>
 				</div>
 			</div>

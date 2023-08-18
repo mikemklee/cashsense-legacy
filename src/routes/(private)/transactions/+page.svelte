@@ -343,7 +343,7 @@
 				<div class="flex justify-end px-6">
 					<Button
 						text="Delete"
-						style="outline"
+						style="alert"
 						onClick={() => onDeleteTransaction(selectedTransaction?.id)}
 					/>
 				</div>
