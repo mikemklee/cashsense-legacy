@@ -10,6 +10,7 @@
 	import accountStore from '$lib/stores/accountStore';
 	import categoryStore from '$lib/stores/categoryStore';
 	import { Toaster } from 'svelte-french-toast';
+	import { getSiteName } from '$lib/utils/env';
 
 	export let data;
 
@@ -31,10 +32,12 @@
 
 		return () => data.subscription.unsubscribe();
 	});
+
+	const siteName = getSiteName();
 </script>
 
 <svelte:head>
-	<title>cashsense</title>
+	<title>{siteName}</title>
 </svelte:head>
 
 <main class="grow flex flex-col">
