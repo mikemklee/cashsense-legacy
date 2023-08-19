@@ -17,7 +17,7 @@
 		}
 
 		if (disabled) {
-			styles += ' opacity-30 cursor-default pointer-events-none';
+			styles += ' opacity-40 cursor-default pointer-events-none';
 		}
 
 		return styles;

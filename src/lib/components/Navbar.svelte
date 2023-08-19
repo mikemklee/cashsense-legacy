@@ -79,7 +79,7 @@
 			>
 				<div class="px-4 py-4 flex flex-col border-b border-gray-600">
 					<span class="font-semibold">{profile?.full_name}</span>
-					<span class="text-sm">{profile?.email}</span>
+					<span class="text-sm">{profile?.email || ''}</span>
 				</div>
 
 				<div class="flex flex-col">

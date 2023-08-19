@@ -16,6 +16,6 @@
 		bind:value
 		required={isRequired}
 		disabled={isDisabled}
-		class="px-2 py-1 border border-gray-400 bg-transparent rounded"
+		class="px-2 py-1 border border-gray-400 bg-transparent rounded {isDisabled ? 'opacity-40' : ''}"
 	/>
 </div>

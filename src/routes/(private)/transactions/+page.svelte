@@ -93,6 +93,9 @@
 		fetchTransactions();
 	}
 
+	// Can't create a new record if there are no accounts or categories
+	$: isNewRecordDisabled = !categories.length || !accounts.length;
+
 	// data subscriptions
 	const unsubscribeFromAccountStore = accountStore.subscribe((state) => {
 		accounts = state.data;
@@ -163,7 +166,11 @@
 	<section class="border-r border-r-gray-700 w-[380px]">
 		<div class="p-6 border-b border-b-gray-700 flex items-center justify-between">
 			<Heading isSnug>Transactions</Heading>
-			<Button text="New record" onClick={() => (showCollapsible = !showCollapsible)} />
+			<Button
+				text="New record"
+				onClick={() => (showCollapsible = !showCollapsible)}
+				isDisabled={isNewRecordDisabled}
+			/>
 		</div>
 
 		<NewTransactionPanel
