@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
+	import toast from 'svelte-french-toast';
 
 	import Button from '$lib/components/Button.svelte';
 	import CategoryTag from '$lib/components/CategoryTag.svelte';
 	import Heading from '$lib/components/Heading.svelte';
+	import categoryStore from '$lib/stores/categoryStore';
 	import type { Category } from '$lib/types';
 	import EditRecordModal from './EditRecordModal.svelte';
 	import NewRecordModal from './NewRecordModal.svelte';
-	import categoryStore from '$lib/stores/categoryStore';
 
 	let categories: Category[] = [];
 
@@ -22,9 +23,18 @@
 	});
 
 	async function onDelete(accountId?: string) {
-		await fetch(`/api/categories?id=${accountId}`, {
-			method: 'DELETE'
-		});
+		try {
+			const response = await fetch(`/api/categories?id=${accountId}`, {
+				method: 'DELETE'
+			});
+			if (response.ok) {
+				toast.success('Category deleted');
+			} else {
+				throw response;
+			}
+		} catch (error) {
+			toast.error('Something went wrong while deleting category');
+		}
 	}
 
 	function onEdit(record?: Category) {

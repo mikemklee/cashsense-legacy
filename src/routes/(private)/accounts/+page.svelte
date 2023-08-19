@@ -2,11 +2,13 @@
 	import Icon from '@iconify/svelte';
 	import { onDestroy } from 'svelte';
 
+	import toast from 'svelte-french-toast';
+
 	import Button from '$lib/components/Button.svelte';
 	import Heading from '$lib/components/Heading.svelte';
+	import accountStore from '$lib/stores/accountStore';
 	import type { Account } from '$lib/types';
 	import NewAccountModal from './NewAccountModal.svelte';
-	import accountStore from '$lib/stores/accountStore';
 
 	let accounts: Account[] = [];
 	let showNewAccountModal = false;
@@ -28,9 +30,19 @@
 
 	async function onDeleteAccount(accountId?: string) {
 		if (!accountId) return;
-		await fetch(`/api/accounts?id=${accountId}`, {
-			method: 'DELETE'
-		});
+
+		try {
+			const response = await fetch(`/api/accounts?id=${accountId}`, {
+				method: 'DELETE'
+			});
+			if (response.ok) {
+				toast.success('Account deleted');
+			} else {
+				throw response;
+			}
+		} catch (error) {
+			toast.error('Something went wrong while deleting account');
+		}
 	}
 
 	const humanizeAccountType = (type: string) => {
