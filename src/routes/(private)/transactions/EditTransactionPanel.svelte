@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { format, parseISO } from 'date-fns';
+	import { format } from 'date-fns';
 	import { onDestroy, onMount } from 'svelte';
 
 	import Button from '$lib/components/Button.svelte';
@@ -10,6 +10,7 @@
 	import type { Account, Category, LiftedTransaction } from '$lib/types';
 	import accountStore from '$lib/stores/accountStore';
 	import categoryStore from '$lib/stores/categoryStore';
+	import transactionStore from '$lib/stores/transactions';
 
 	export let transaction: LiftedTransaction;
 	export let onClose = () => {};
@@ -81,17 +82,13 @@
 		const amountInCents = Math.round(rawDollarAmount * 100);
 		const centsWithDirection = selectedDirection === '-1' ? -amountInCents : amountInCents;
 
-		await fetch('/api/transactions', {
-			method: 'PATCH',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				id: transaction.id,
-				posted_at: new Date(selectedDate),
-				description: enteredDescription,
-				amount: centsWithDirection,
-				category_id: selectedCategory,
-				account_id: selectedAccount
-			})
+		await transactionStore.updateTransaction({
+			id: transaction.id,
+			posted_at: new Date(selectedDate),
+			description: enteredDescription,
+			amount: centsWithDirection,
+			category_id: selectedCategory,
+			account_id: selectedAccount
 		});
 
 		onSubmit();

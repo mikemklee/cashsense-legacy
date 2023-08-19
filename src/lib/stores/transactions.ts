@@ -28,13 +28,38 @@ const createStore = <T>() => {
       update((state) => ({ ...state, data, loading: false }));
       return data;
     } catch (error) {
-      update((state) => ({ ...state, loading: false, error: error as Error, }));
+      update((state) => ({ ...state, loading: false, error: error as Error }));
     }
+  }
 
+  const updateTransaction = async (updateData: any) => {
+    update((state) => ({ ...state, loading: true, error: null }));
+    try {
+
+      const response = await fetch('/api/transactions', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateData)
+      });
+      const [updatedRecord] = await response.json();
+
+      update((state) => {
+        const updatedData = state.data
+          .map((transaction) => transaction.id === updatedRecord.id
+            ? updatedRecord
+            : transaction
+          );
+        return { ...state, data: updatedData, loading: false }
+      });
+
+    } catch (error) {
+      update((state) => ({ ...state, loading: false, error: error as Error }));
+    }
   }
 
   return {
     fetchTransactions,
+    updateTransaction,
     subscribe,
     set,
     update,

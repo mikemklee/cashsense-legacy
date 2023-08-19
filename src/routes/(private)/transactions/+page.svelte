@@ -32,22 +32,8 @@
 	$: formattedEndDate = selectedEndDate ? dateFormat(selectedEndDate, 'yyyy-MM-dd') : '';
 
 	async function fetchTransactions() {
-		const data = await transactionStore.fetchTransactions(formattedStartDate, formattedEndDate);
-
-		transactions = data.filter(
-			(transaction: LiftedTransaction) =>
-				selectedCategories.includes(transaction.category_id) &&
-				selectedAccounts.includes(transaction.account_id)
-		);
+		await transactionStore.fetchTransactions(formattedStartDate, formattedEndDate);
 	}
-
-	const onDeleteTransaction = async (transactionId?: string) => {
-		await fetch(`/api/transactions?id=${transactionId}`, {
-			method: 'DELETE'
-		});
-
-		onDeselectTransaction();
-	};
 
 	function onSelectTransaction(transaction: LiftedTransaction | null) {
 		selectedTransaction = transaction;
@@ -59,11 +45,6 @@
 
 	let accounts: Account[] = [];
 	let selectedAccounts: string[] = [];
-
-	const unsubscribeFromAccountStore = accountStore.subscribe((state) => {
-		accounts = state.data;
-		selectedAccounts = accounts.map((account: Account) => account.id);
-	});
 
 	async function onSelectAccountFilterItem(accountId: string) {
 		if (selectedAccounts.includes(accountId)) {
@@ -87,13 +68,6 @@
 
 	let categories: Category[] = [];
 	let selectedCategories: string[] = [];
-
-	const unsubscribeFromCategoryStore = categoryStore.subscribe((state) => {
-		categories = state.data;
-		selectedCategories = categories
-			.map((category: Category) => category.id)
-			.filter((id: string) => id !== '9723abaa-de74-468e-bb77-62235cf2ea0b');
-	});
 
 	async function onSelectCategoryFilterItem(categoryId: string) {
 		if (selectedCategories.includes(categoryId)) {
@@ -119,9 +93,31 @@
 		fetchTransactions();
 	}
 
+	// data subscriptions
+	const unsubscribeFromAccountStore = accountStore.subscribe((state) => {
+		accounts = state.data;
+		selectedAccounts = accounts.map((account: Account) => account.id);
+	});
+
+	const unsubscribeFromCategoryStore = categoryStore.subscribe((state) => {
+		categories = state.data;
+		selectedCategories = categories
+			.map((category: Category) => category.id)
+			.filter((id: string) => id !== '9723abaa-de74-468e-bb77-62235cf2ea0b');
+	});
+
+	const unsubscribeFromTransactionStore = transactionStore.subscribe((state) => {
+		transactions = state.data.filter(
+			(transaction: LiftedTransaction) =>
+				selectedCategories.includes(transaction.category_id) &&
+				selectedAccounts.includes(transaction.account_id)
+		);
+	});
+
 	onDestroy(() => {
 		unsubscribeFromAccountStore();
 		unsubscribeFromCategoryStore();
+		unsubscribeFromTransactionStore();
 	});
 
 	const columns = [

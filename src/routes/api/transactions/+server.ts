@@ -25,6 +25,7 @@ export async function POST({ request, locals: { supabase, getSession } }) {
     })
 
   if (insertError) {
+    console.error(insertError)
     throw error(statusCode, 'Unexpected error while adding new transaction')
   } else {
     return json(data)
@@ -37,7 +38,7 @@ export async function PATCH({ request, locals: { supabase, getSession } }) {
     throw error(401, 'Unauthorized');
   }
 
-  const { id, posted_at, description, amount, category_id, acocunt_id } = await request.json();
+  const { id, posted_at, description, amount, category_id, account_id } = await request.json();
 
   const {
     data,
@@ -50,13 +51,19 @@ export async function PATCH({ request, locals: { supabase, getSession } }) {
       description,
       amount,
       category_id,
-      acocunt_id
+      account_id,
+      updated_at: new Date().toISOString(),
     })
     .eq('id', id)
     .eq('profile_id', session.user.id)
+    .select(`
+      *,
+      account:accounts (id, name),
+      category:categories (id, name, color)
+    `)
 
   if (updateError) {
-    console.log(updateError)
+    console.error(updateError)
     throw error(statusCode, 'Unexpected error while updating transaction')
   } else {
     return json(data)
@@ -132,6 +139,7 @@ export async function DELETE({ url, locals: { supabase, getSession } }) {
     .eq('profile_id', session.user.id)
 
   if (deleteError) {
+    console.error(deleteError)
     throw error(statusCode, 'Unexpected error while deleting transaction')
   } else {
     return json('Transaction deleted')
