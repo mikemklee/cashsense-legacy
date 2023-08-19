@@ -1,4 +1,5 @@
 import type { LiftedTransaction } from '$lib/types';
+import toast from 'svelte-french-toast';
 import { writable } from 'svelte/store';
 
 interface ApiResponse<T> {
@@ -52,8 +53,10 @@ const createStore = <T>() => {
         return { ...state, data: updatedData, loading: false }
       });
 
+      toast.success(`Transaction updated`);
     } catch (error) {
       update((state) => ({ ...state, loading: false, error: error as Error }));
+      toast.error(`Something went wrong while updating transaction`);
     }
   }
 

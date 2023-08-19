@@ -2,6 +2,7 @@
 	import Icon from '@iconify/svelte';
 	import { format } from 'date-fns';
 	import { onDestroy } from 'svelte';
+	import toast from 'svelte-french-toast';
 
 	import Button from '$lib/components/Button.svelte';
 	import Collapsible from '$lib/components/Collapsible.svelte';
@@ -80,6 +81,8 @@
 				account_id: selectedAccount
 			})
 		});
+
+		toast.success(`Transaction record created`);
 
 		onSubmit();
 		resetFields();

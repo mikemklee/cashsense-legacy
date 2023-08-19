@@ -57,6 +57,7 @@
 		"date-fns": "^2.30.0",
 		"date-fns-tz": "^2.0.0",
 		"layercake": "^7.6.1",
+		"svelte-french-toast": "^1.2.0",
 		"uuid": "^9.0.0"
 	}
 }

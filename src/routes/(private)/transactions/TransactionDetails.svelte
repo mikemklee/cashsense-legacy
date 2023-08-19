@@ -10,6 +10,7 @@
 	import type { LiftedTransaction } from '$lib/types';
 
 	import EditTransactionPanel from './EditTransactionPanel.svelte';
+	import toast from 'svelte-french-toast';
 
 	let showEditPanel = false;
 	export let transaction: LiftedTransaction | null = null;
@@ -21,6 +22,8 @@
 		await fetch(`/api/transactions?id=${transactionId}`, {
 			method: 'DELETE'
 		});
+
+		toast.success('Transaction record deleted');
 
 		handleDeselect();
 	};

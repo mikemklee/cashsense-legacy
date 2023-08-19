@@ -1,16 +1,17 @@
 <script lang="ts">
 	import { format } from 'date-fns';
 	import { onDestroy, onMount } from 'svelte';
+	import toast from 'svelte-french-toast';
 
 	import Button from '$lib/components/Button.svelte';
 	import DateInput from '$lib/components/inputs/DateInput.svelte';
 	import NumberInput from '$lib/components/inputs/NumberInput.svelte';
 	import SelectInput, { type Option } from '$lib/components/inputs/SelectInput.svelte';
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
-	import type { Account, Category, LiftedTransaction } from '$lib/types';
 	import accountStore from '$lib/stores/accountStore';
 	import categoryStore from '$lib/stores/categoryStore';
 	import transactionStore from '$lib/stores/transactions';
+	import type { Account, Category, LiftedTransaction } from '$lib/types';
 
 	export let transaction: LiftedTransaction;
 	export let onClose = () => {};
@@ -90,6 +91,8 @@
 			category_id: selectedCategory,
 			account_id: selectedAccount
 		});
+
+		toast.success(`Transaction record updated`);
 
 		onSubmit();
 		resetFields();

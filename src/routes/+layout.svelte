@@ -9,6 +9,7 @@
 	import ScrollToTop from '$lib/components/ScrollToTop.svelte';
 	import accountStore from '$lib/stores/accountStore';
 	import categoryStore from '$lib/stores/categoryStore';
+	import { Toaster } from 'svelte-french-toast';
 
 	export let data;
 
@@ -43,3 +44,5 @@
 </main>
 
 <ScrollToTop />
+
+<Toaster />
