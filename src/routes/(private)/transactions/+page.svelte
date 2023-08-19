@@ -3,11 +3,8 @@
 	import { format as dateFormat, startOfMonth } from 'date-fns';
 	import { onDestroy } from 'svelte';
 
-	import AmountSpan from '$lib/components/AmountSpan.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import CategoryTag from '$lib/components/CategoryTag.svelte';
-	import DateSpan from '$lib/components/DateSpan.svelte';
-	import Drawer from '$lib/components/Drawer.svelte';
 	import Heading from '$lib/components/Heading.svelte';
 	import Selectable from '$lib/components/Selectable.svelte';
 	import DateInput from '$lib/components/inputs/DateInput.svelte';
@@ -19,9 +16,10 @@
 	import NewTransactionPanel from './NewTransactionPanel.svelte';
 	import TransactionInsights from './TransactionInsights.svelte';
 
-	import transactionStore from '$lib/stores/transactions';
-	import categoryStore from '$lib/stores/categoryStore';
 	import accountStore from '$lib/stores/accountStore';
+	import categoryStore from '$lib/stores/categoryStore';
+	import transactionStore from '$lib/stores/transactions';
+	import TransactionDetails from './TransactionDetails.svelte';
 
 	let transactions: LiftedTransaction[] = [];
 	let selectedStartDate: Date | null = startOfMonth(new Date('2023-07-02'));
@@ -296,55 +294,7 @@
 
 	<!-- Main -->
 	<div class="relative flex-grow">
-		<Drawer show={!!selectedTransaction} onClose={onDeselectTransaction}>
-			<div slot="header" class="p-6 flex items-center justify-between mb-4 text-lg">
-				<Heading isSnug>Transaction details</Heading>
-				<button on:click={onDeselectTransaction}>
-					<Icon icon="tabler:x" />
-				</button>
-			</div>
-
-			{#if selectedTransaction}
-				<div class="px-6 mb-4 flex flex-col gap-2">
-					<div>
-						<span class="text-sm text-gray-400">Date</span>
-						<DateSpan value={selectedTransaction.posted_at} />
-					</div>
-
-					<div>
-						<span class="text-sm text-gray-400">Description</span>
-						<div>{selectedTransaction.description}</div>
-					</div>
-
-					<div>
-						<span class="text-sm text-gray-400">Category</span>
-						<CategoryTag
-							color={selectedTransaction.category.color}
-							name={selectedTransaction.category.name}
-						/>
-					</div>
-
-					<div>
-						<span class="text-sm text-gray-400">Account</span>
-						<div>{selectedTransaction.account.name}</div>
-					</div>
-
-					<div>
-						<span class="text-sm text-gray-400">Amount</span>
-						<AmountSpan value={selectedTransaction.amount} />
-					</div>
-				</div>
-
-				<div class="flex justify-end px-6 gap-4">
-					<Button text="Edit" style="secondary" onClick={() => {}} />
-					<Button
-						text="Delete"
-						style="alert"
-						onClick={() => onDeleteTransaction(selectedTransaction?.id)}
-					/>
-				</div>
-			{/if}
-		</Drawer>
+		<TransactionDetails transaction={selectedTransaction} onDeselect={onDeselectTransaction} />
 		<section class="p-6 pr-12">
 			{#if transactions.length > 0}
 				<TransactionInsights {transactions} />

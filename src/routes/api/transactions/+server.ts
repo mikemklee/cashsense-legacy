@@ -31,6 +31,39 @@ export async function POST({ request, locals: { supabase, getSession } }) {
   }
 }
 
+export async function PATCH({ request, locals: { supabase, getSession } }) {
+  const session = await getSession()
+  if (!session) {
+    throw error(401, 'Unauthorized');
+  }
+
+  const { id, posted_at, description, amount, category_id, acocunt_id } = await request.json();
+
+  const {
+    data,
+    error: updateError,
+    status: statusCode,
+  } = await supabase
+    .from('transactions')
+    .update({
+      posted_at,
+      description,
+      amount,
+      category_id,
+      acocunt_id
+    })
+    .eq('id', id)
+    .eq('profile_id', session.user.id)
+
+  if (updateError) {
+    console.log(updateError)
+    throw error(statusCode, 'Unexpected error while updating transaction')
+  } else {
+    return json(data)
+  }
+
+}
+
 export async function GET({ url, locals: { supabase } }) {
   // Get query parameters from the URL
   const startDateParam = url.searchParams.get('startDate');
