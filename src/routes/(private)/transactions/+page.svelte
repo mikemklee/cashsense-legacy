@@ -163,7 +163,7 @@
 
 <div class="flex h-full">
 	<!-- Side -->
-	<section class="border-r border-r-gray-700 w-[380px]">
+	<section class="border-r border-r-gray-700 w-[380px] sticky top-14 h-screen overflow-auto">
 		<div class="p-6 border-b border-b-gray-700 flex items-center justify-between">
 			<Heading isSnug>Transactions</Heading>
 			<Button
@@ -319,3 +319,13 @@
 		</section>
 	</div>
 </div>
+
+<style>
+	section {
+		-ms-overflow-style: none; /* Internet Explorer 10+ */
+		scrollbar-width: none; /* Firefox */
+	}
+	section::-webkit-scrollbar {
+		display: none; /* Safari and Chrome */
+	}
+</style>
