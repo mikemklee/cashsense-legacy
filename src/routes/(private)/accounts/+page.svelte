@@ -1,26 +1,25 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 
 	import Button from '$lib/components/Button.svelte';
 	import Heading from '$lib/components/Heading.svelte';
 	import type { Account } from '$lib/types';
 	import NewAccountModal from './NewAccountModal.svelte';
+	import accountStore from '$lib/stores/accountStore';
 
 	let accounts: Account[] = [];
 	let showNewAccountModal = false;
 	let selectedAccount: Account | undefined = undefined;
 
-	async function fetchAccounts() {
-		const response = await fetch('/api/accounts');
-		const data = await response.json();
-		accounts = data;
+	const unsubscribeFromAccountStore = accountStore.subscribe((state) => {
+		accounts = state.data;
 
 		if (accounts.length > 0) selectedAccount = accounts[0];
-	}
+	});
 
-	onMount(() => {
-		fetchAccounts();
+	onDestroy(() => {
+		unsubscribeFromAccountStore();
 	});
 
 	function onSelectAccount(account: Account) {
@@ -32,8 +31,6 @@
 		await fetch(`/api/accounts?id=${accountId}`, {
 			method: 'DELETE'
 		});
-
-		fetchAccounts();
 	}
 
 	const humanizeAccountType = (type: string) => {
@@ -110,7 +107,6 @@
 	showModal={showNewAccountModal}
 	on:close={() => (showNewAccountModal = false)}
 	onSubmit={() => {
-		fetchAccounts();
 		showNewAccountModal = false;
 	}}
 />

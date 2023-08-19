@@ -7,6 +7,8 @@
 	import { invalidate } from '$app/navigation';
 	import '../app.css';
 	import ScrollToTop from '$lib/components/ScrollToTop.svelte';
+	import accountStore from '$lib/stores/accountStore';
+	import categoryStore from '$lib/stores/categoryStore';
 
 	export let data;
 
@@ -18,6 +20,13 @@
 				invalidate('supabase:auth');
 			}
 		});
+
+		const fetchData = async () => {
+			await accountStore.fetchAccounts();
+			await categoryStore.fetchCategories();
+		};
+
+		fetchData();
 
 		return () => data.subscription.unsubscribe();
 	});

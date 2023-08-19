@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { format as dateFormat, startOfMonth } from 'date-fns';
-	import { onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 
 	import AmountSpan from '$lib/components/AmountSpan.svelte';
 	import Button from '$lib/components/Button.svelte';
@@ -19,6 +19,10 @@
 	import NewTransactionPanel from './NewTransactionPanel.svelte';
 	import TransactionInsights from './TransactionInsights.svelte';
 
+	import transactionStore from '$lib/stores/transactions';
+	import categoryStore from '$lib/stores/categoryStore';
+	import accountStore from '$lib/stores/accountStore';
+
 	let transactions: LiftedTransaction[] = [];
 	let selectedStartDate: Date | null = startOfMonth(new Date('2023-07-02'));
 	let selectedEndDate: Date | null = new Date();
@@ -30,13 +34,7 @@
 	$: formattedEndDate = selectedEndDate ? dateFormat(selectedEndDate, 'yyyy-MM-dd') : '';
 
 	async function fetchTransactions() {
-		let queryPath = '/api/transactions';
-
-		queryPath += `?startDate=${formattedStartDate}`;
-		queryPath += `&endDate=${formattedEndDate}`;
-
-		const response = await fetch(queryPath);
-		const data = await response.json();
+		const data = await transactionStore.fetchTransactions(formattedStartDate, formattedEndDate);
 
 		transactions = data.filter(
 			(transaction: LiftedTransaction) =>
@@ -51,7 +49,6 @@
 		});
 
 		onDeselectTransaction();
-		await fetchTransactions();
 	};
 
 	function onSelectTransaction(transaction: LiftedTransaction | null) {
@@ -65,12 +62,10 @@
 	let accounts: Account[] = [];
 	let selectedAccounts: string[] = [];
 
-	async function fetchAccounts() {
-		const response = await fetch('/api/accounts');
-		const data = await response.json();
-		accounts = data;
-		selectedAccounts = data.map((account: Account) => account.id);
-	}
+	const unsubscribeFromAccountStore = accountStore.subscribe((state) => {
+		accounts = state.data;
+		selectedAccounts = accounts.map((account: Account) => account.id);
+	});
 
 	async function onSelectAccountFilterItem(accountId: string) {
 		if (selectedAccounts.includes(accountId)) {
@@ -95,15 +90,12 @@
 	let categories: Category[] = [];
 	let selectedCategories: string[] = [];
 
-	async function fetchCategories() {
-		const response = await fetch('/api/categories');
-		const data = await response.json();
-
-		categories = data;
-		selectedCategories = data
+	const unsubscribeFromCategoryStore = categoryStore.subscribe((state) => {
+		categories = state.data;
+		selectedCategories = categories
 			.map((category: Category) => category.id)
 			.filter((id: string) => id !== '9723abaa-de74-468e-bb77-62235cf2ea0b');
-	}
+	});
 
 	async function onSelectCategoryFilterItem(categoryId: string) {
 		if (selectedCategories.includes(categoryId)) {
@@ -125,10 +117,13 @@
 		await fetchTransactions();
 	}
 
-	onMount(async () => {
-		await fetchCategories();
-		await fetchAccounts();
-		await fetchTransactions();
+	$: if (selectedAccounts.length > 0 && selectedCategories.length > 0) {
+		fetchTransactions();
+	}
+
+	onDestroy(() => {
+		unsubscribeFromAccountStore();
+		unsubscribeFromCategoryStore();
 	});
 
 	const columns = [
@@ -340,7 +335,8 @@
 					</div>
 				</div>
 
-				<div class="flex justify-end px-6">
+				<div class="flex justify-end px-6 gap-4">
+					<Button text="Edit" style="secondary" onClick={() => {}} />
 					<Button
 						text="Delete"
 						style="alert"

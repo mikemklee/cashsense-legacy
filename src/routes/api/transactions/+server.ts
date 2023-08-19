@@ -36,6 +36,7 @@ export async function GET({ url, locals: { supabase } }) {
   const startDateParam = url.searchParams.get('startDate');
   const endDateParam = url.searchParams.get('endDate');
 
+
   // Parse and validate the query parameters
   const startDate = startDateParam ? new Date(startDateParam) : null;
   const endDate = endDateParam ? new Date(endDateParam) : null;
@@ -48,9 +49,6 @@ export async function GET({ url, locals: { supabase } }) {
   if (endDateParam && !endDate) {
     throw error(400, 'Invalid endDate');
   }
-
-  // to ensure end date is inclusive
-  const dayAfterEndDate = new Date(endDate!.getTime() + 24 * 60 * 60 * 1000);
 
   let query = supabase
     .from('transactions')
@@ -66,6 +64,9 @@ export async function GET({ url, locals: { supabase } }) {
   }
 
   if (endDate) {
+    // to ensure end date is inclusive
+    const dayAfterEndDate = new Date(endDate.getTime() + 24 * 60 * 60 * 1000);
+
     // Check if the end_date is provided and filter transactions before or on the endDate
     query = query.lt('posted_at', dayAfterEndDate.toISOString())
   }

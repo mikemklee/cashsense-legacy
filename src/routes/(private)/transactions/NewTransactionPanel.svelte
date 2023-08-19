@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { format } from 'date-fns';
-	import { onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 
 	import Button from '$lib/components/Button.svelte';
 	import Collapsible from '$lib/components/Collapsible.svelte';
@@ -11,6 +11,8 @@
 	import SelectInput, { type Option } from '$lib/components/inputs/SelectInput.svelte';
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
 	import type { Account, Category } from '$lib/types';
+	import accountStore from '$lib/stores/accountStore';
+	import categoryStore from '$lib/stores/categoryStore';
 
 	export let showPanel: boolean;
 	export let onClose = () => {};
@@ -27,25 +29,24 @@
 	let selectedAccount = '';
 	let accountOptions: Option[] = [];
 
-	async function fetchCategories() {
-		const response = await fetch('/api/categories');
-		const data = await response.json();
-
-		categoryOptions = data.map((category: Category) => ({
+	const unsubscribeFromCategoryStore = categoryStore.subscribe((state) => {
+		categoryOptions = state.data.map((category: Category) => ({
 			label: category.name,
 			value: category.id
 		}));
-	}
+	});
 
-	async function fetchAccounts() {
-		const response = await fetch('/api/accounts');
-		const data = await response.json();
-
-		accountOptions = data.map((account: Account) => ({
+	const unsubscribeFromAccountStore = accountStore.subscribe((state) => {
+		accountOptions = state.data.map((account: Account) => ({
 			label: account.name,
 			value: account.id
 		}));
-	}
+	});
+
+	onDestroy(() => {
+		unsubscribeFromCategoryStore();
+		unsubscribeFromAccountStore();
+	});
 
 	function resetFields() {
 		selectedDate = format(new Date(), 'yyyy-MM-dd');
@@ -83,12 +84,6 @@
 		onSubmit();
 		resetFields();
 	}
-
-	onMount(() => {
-		// TODO: Maybe use a store for this?
-		fetchAccounts();
-		fetchCategories();
-	});
 </script>
 
 <Collapsible show={showPanel}>

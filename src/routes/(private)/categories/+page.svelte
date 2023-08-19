@@ -1,6 +1,5 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 
 	import Button from '$lib/components/Button.svelte';
 	import CategoryTag from '$lib/components/CategoryTag.svelte';
@@ -8,6 +7,7 @@
 	import type { Category } from '$lib/types';
 	import EditRecordModal from './EditRecordModal.svelte';
 	import NewRecordModal from './NewRecordModal.svelte';
+	import categoryStore from '$lib/stores/categoryStore';
 
 	let categories: Category[] = [];
 
@@ -15,20 +15,16 @@
 	let showNewRecordModal = false;
 	let showEditRecordModal = false;
 
-	async function fetchCategories() {
-		const response = await fetch('/api/categories');
-		const data = await response.json();
-		categories = data;
+	const unsubscribeFromCategoryStore = categoryStore.subscribe((state) => {
+		categories = state.data;
 
 		if (categories.length > 0) selectedRecord = categories[0];
-	}
+	});
 
 	async function onDelete(accountId?: string) {
 		await fetch(`/api/categories?id=${accountId}`, {
 			method: 'DELETE'
 		});
-
-		fetchCategories();
 	}
 
 	function onEdit(record?: Category) {
@@ -40,8 +36,8 @@
 		selectedRecord = record;
 	}
 
-	onMount(() => {
-		fetchCategories();
+	onDestroy(() => {
+		unsubscribeFromCategoryStore();
 	});
 </script>
 
@@ -96,7 +92,6 @@
 	showModal={showNewRecordModal}
 	on:close={() => (showNewRecordModal = false)}
 	onSubmit={() => {
-		fetchCategories();
 		showNewRecordModal = false;
 	}}
 />
@@ -108,7 +103,6 @@
 			showEditRecordModal = false;
 		}}
 		onSubmit={() => {
-			fetchCategories();
 			showEditRecordModal = false;
 		}}
 	/>
