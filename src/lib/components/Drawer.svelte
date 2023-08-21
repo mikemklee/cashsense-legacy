@@ -7,20 +7,19 @@
 
 {#if show}
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		class="absolute w-full h-full bg-[#00000040] z-10"
 		on:click={onClose}
 		transition:fade={{ duration: 100 }}
 	>
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div
-			transition:slide={{ duration: 100, axis: 'x' }}
-			class="border-r border-gray-700 bg-gray-800 w-auto max-w-[500px] h-full"
+			class="border-r border-gray-700 bg-gray-800 w-auto max-w-[500px] h-screen sticky top-14"
+			on:click|stopPropagation
 		>
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div on:click|stopPropagation class="h-full">
-				<slot name="header" />
-				<slot />
-			</div>
+			<slot name="header" />
+			<slot />
 		</div>
 	</div>
 {/if}
