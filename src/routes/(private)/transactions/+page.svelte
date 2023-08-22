@@ -26,16 +26,20 @@
 	let selectedEndDate: Date | null = new Date();
 
 	let searchValue = '';
-	let submittedSearchValue = '';
+
+	let timer: NodeJS.Timeout;
+
+	const debounce = (value: string) => {
+		clearTimeout(timer);
+		timer = setTimeout(async () => {
+			searchValue = value;
+			await fetchTransactions();
+		}, 750);
+	};
 
 	function handleSearchInput(event: Event) {
 		const target = event.target as HTMLInputElement;
-		searchValue = target.value;
-	}
-
-	async function handleSearchSubmit(event: Event) {
-		await fetchTransactions();
-		submittedSearchValue = searchValue;
+		debounce(target.value);
 	}
 
 	let showCollapsible = false;
@@ -319,10 +323,10 @@
 			<div>
 				<div class="flex items-center mb-2">
 					<Heading isSnug>Recorded transactions</Heading>
-					{#if submittedSearchValue}
+					{#if searchValue}
 						<div class="text-gray-400 mr-auto ml-4 text-sm mt-1">
 							Showing results for <span class="font-semibold text-gray-300">
-								"{submittedSearchValue}"
+								"{searchValue}"
 							</span>
 						</div>
 					{/if}
@@ -331,7 +335,6 @@
 							placeholder="Search by description"
 							bind:value={searchValue}
 							on:input={handleSearchInput}
-							on:submit={handleSearchSubmit}
 						/>
 					</div>
 				</div>

@@ -16,7 +16,7 @@
 		on:input
 		{placeholder}
 		disabled={isDisabled}
-		class="pl-8 pr-2 py-1 border border-gray-600 bg-transparent rounded outline-none w-[220px]
+		class="pl-8 pr-2 py-1 border border-gray-600 bg-transparent rounded w-[220px]
     {isDisabled ? 'opacity-40' : ''}"
 	/>
 </form>
