@@ -8,22 +8,35 @@
 	import Heading from '$lib/components/Heading.svelte';
 	import Selectable from '$lib/components/Selectable.svelte';
 	import DateInput from '$lib/components/inputs/DateInput.svelte';
+	import SearchInput from '$lib/components/inputs/SearchInput.svelte';
 	import AmountCell from '$lib/components/table/AmountCell.svelte';
 	import CategoryCell from '$lib/components/table/CategoryCell.svelte';
 	import DataTable from '$lib/components/table/DataTable.svelte';
 	import DateCell from '$lib/components/table/DateCell.svelte';
-	import type { Account, Category, LiftedTransaction } from '$lib/types';
-	import NewTransactionPanel from './NewTransactionPanel.svelte';
-	import TransactionInsights from './TransactionInsights.svelte';
-
 	import accountStore from '$lib/stores/accountStore';
 	import categoryStore from '$lib/stores/categoryStore';
 	import transactionStore from '$lib/stores/transactions';
+	import type { Account, Category, LiftedTransaction } from '$lib/types';
+	import NewTransactionPanel from './NewTransactionPanel.svelte';
 	import TransactionDetails from './TransactionDetails.svelte';
+	import TransactionInsights from './TransactionInsights.svelte';
 
 	let transactions: LiftedTransaction[] = [];
 	let selectedStartDate: Date | null = startOfMonth(new Date());
 	let selectedEndDate: Date | null = new Date();
+
+	let searchValue = '';
+	let submittedSearchValue = '';
+
+	function handleSearchInput(event: Event) {
+		const target = event.target as HTMLInputElement;
+		searchValue = target.value;
+	}
+
+	async function handleSearchSubmit(event: Event) {
+		await fetchTransactions();
+		submittedSearchValue = searchValue;
+	}
 
 	let showCollapsible = false;
 	let selectedTransaction: LiftedTransaction | null = null;
@@ -32,7 +45,7 @@
 	$: formattedEndDate = selectedEndDate ? dateFormat(selectedEndDate, 'yyyy-MM-dd') : '';
 
 	async function fetchTransactions() {
-		await transactionStore.fetchTransactions(formattedStartDate, formattedEndDate);
+		await transactionStore.fetchTransactions(formattedStartDate, formattedEndDate, searchValue);
 	}
 
 	function onSelectTransaction(transaction: LiftedTransaction | null) {
@@ -301,21 +314,40 @@
 		<section class="p-6 pr-12">
 			{#if transactions.length > 0}
 				<TransactionInsights {transactions} />
+			{/if}
 
-				<div>
-					<Heading>Recorded transactions</Heading>
+			<div>
+				<div class="flex items-center mb-2">
+					<Heading isSnug>Recorded transactions</Heading>
+					{#if submittedSearchValue}
+						<div class="text-gray-400 mr-auto ml-4 text-sm mt-1">
+							Showing results for <span class="font-semibold text-gray-300">
+								"{submittedSearchValue}"
+							</span>
+						</div>
+					{/if}
+					<div class="ml-auto">
+						<SearchInput
+							placeholder="Search by description"
+							bind:value={searchValue}
+							on:input={handleSearchInput}
+							on:submit={handleSearchSubmit}
+						/>
+					</div>
+				</div>
+				{#if transactions.length > 0}
 					<DataTable
 						defaultColumns={columns}
 						defaultData={transactions}
 						selectedItem={selectedTransaction}
 						handleRowSelect={onSelectTransaction}
 					/>
-				</div>
-			{:else}
-				<div class="text-gray-400 text-center mt-20">
-					<span>You don't have any transactions recorded yet.</span>
-				</div>
-			{/if}
+				{:else}
+					<div class="text-gray-400 text-left mt-2">
+						<span>You don't have any transactions recorded yet.</span>
+					</div>
+				{/if}
+			</div>
 		</section>
 	</div>
 </div>

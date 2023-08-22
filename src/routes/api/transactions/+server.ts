@@ -73,11 +73,13 @@ export async function PATCH({ request, locals: { supabase, getSession } }) {
 
 export async function GET({ url, locals: { supabase } }) {
   // Get query parameters from the URL
+  const searchTermParam = url.searchParams.get('searchTerm');
   const startDateParam = url.searchParams.get('startDate');
   const endDateParam = url.searchParams.get('endDate');
 
 
   // Parse and validate the query parameters
+  const searchTerm = searchTermParam ? searchTermParam : null;
   const startDate = startDateParam ? new Date(startDateParam) : null;
   const endDate = endDateParam ? new Date(endDateParam) : null;
 
@@ -97,6 +99,10 @@ export async function GET({ url, locals: { supabase } }) {
       account:accounts (id, name),
       category:categories (id, name, color)
     `)
+
+  if (searchTerm) {
+    query = query.ilike('description', `%${searchTerm}%`)
+  }
 
   if (startDate) {
     // Check if the start_date is provided and filter transactions after or on the startDate

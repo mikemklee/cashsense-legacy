@@ -15,12 +15,12 @@ const createStore = <T>() => {
     error: null
   });
 
-  const fetchTransactions = async (startDate: string = '', endDate: string = '') => {
+  const fetchTransactions = async (startDate: string = '', endDate: string = '', searchTerm = '') => {
     update((state) => ({ ...state, loading: true, error: null }));
     try {
       let queryPath = '/api/transactions';
-
-      queryPath += `?startDate=${startDate}`;
+      queryPath += `?searchTerm=${searchTerm}`;
+      queryPath += `&startDate=${startDate}`;
       queryPath += `&endDate=${endDate}`;
 
       const response = await fetch(queryPath);
