@@ -91,7 +91,20 @@
 		</button>
 	</div>
 	<form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-y-4">
-		<SelectInput label="Account" isRequired options={accountOptions} bind:value={selectedAccount} />
+		<div class="grid grid-cols-2 gap-x-4">
+			<SelectInput
+				label="Category"
+				isRequired
+				options={categoryOptions}
+				bind:value={selectedCategory}
+			/>
+			<SelectInput
+				label="Account"
+				isRequired
+				options={accountOptions}
+				bind:value={selectedAccount}
+			/>
+		</div>
 
 		<DateInput label="Date" bind:value={selectedDate} />
 		<TextInput label="Description" bind:value={enteredDescription} isRequired />
@@ -120,13 +133,6 @@
 				<NumberInput label="Amount" bind:value={enteredAmount} isRequired />
 			</div>
 		</div>
-
-		<SelectInput
-			label="Category"
-			isRequired
-			options={categoryOptions}
-			bind:value={selectedCategory}
-		/>
 
 		<Button type="submit" text="Save" />
 	</form>
