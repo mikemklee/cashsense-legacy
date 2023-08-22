@@ -92,8 +92,6 @@
 			account_id: selectedAccount
 		});
 
-		toast.success(`Transaction record updated`);
-
 		onSubmit();
 		resetFields();
 	}

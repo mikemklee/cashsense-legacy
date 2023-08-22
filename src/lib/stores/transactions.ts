@@ -53,7 +53,7 @@ const createStore = <T>() => {
         return { ...state, data: updatedData, loading: false }
       });
 
-      toast.success(`Transaction updated`);
+      toast.success(`Transaction record updated`);
     } catch (error) {
       update((state) => ({ ...state, loading: false, error: error as Error }));
       toast.error(`Something went wrong while updating transaction`);
