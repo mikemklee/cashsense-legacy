@@ -50,18 +50,12 @@
 	});
 
 	function resetFields() {
-		selectedDate = format(new Date(), 'yyyy-MM-dd');
 		enteredDescription = '';
 		enteredAmount = 0;
 		selectedCategory = '';
-		selectedAccount = '';
 
 		if (categoryOptions.length > 0) {
 			selectedCategory = categoryOptions[0].value;
-		}
-
-		if (accountOptions.length > 0) {
-			selectedAccount = accountOptions[0].value;
 		}
 	}
 
