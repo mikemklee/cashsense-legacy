@@ -19,7 +19,7 @@
 	const unsubscribeFromCategoryStore = categoryStore.subscribe((state) => {
 		categories = state.data;
 
-		if (categories.length > 0) selectedRecord = categories[0];
+		if (categories.length > 0 && !selectedRecord) selectedRecord = categories[0];
 	});
 
 	async function onDelete(accountId?: string) {
@@ -37,13 +37,20 @@
 		}
 	}
 
-	function onEdit(record?: Category) {
-		showEditRecordModal = true;
-		selectedRecord = record;
-	}
+	async function onSaveEdit(enteredName: string, enteredColor: string) {
+		showEditRecordModal = false;
 
-	function onClick(record: Category) {
-		selectedRecord = record;
+		if (!selectedRecord) return;
+
+		await fetch('/api/categories', {
+			method: 'PATCH',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				id: selectedRecord.id,
+				name: enteredName,
+				color: enteredColor
+			})
+		});
 	}
 
 	onDestroy(() => {
@@ -69,7 +76,7 @@
 						flex items-center
 						cursor-pointer hover:bg-gray-700 transition-all
 						{selectedRecord?.id === category.id ? 'opacity-100 bg-gray-700 border-transparent' : 'opacity-40'}"
-						on:click={() => onClick(category)}
+						on:click={() => (selectedRecord = category)}
 					>
 						<CategoryTag color={category.color} name={category.name} />
 					</div>
@@ -90,10 +97,16 @@
 					<CategoryTag color={selectedRecord.color} name={selectedRecord.name} />
 				</div>
 				<div class="ml-auto flex gap-2">
-					<Button text="Edit" onClick={() => onEdit(selectedRecord)} style="secondary" />
+					<Button text="Edit" onClick={() => (showEditRecordModal = true)} style="secondary" />
 					<Button text="Delete" onClick={() => onDelete(selectedRecord?.id)} style="alert" />
 				</div>
 			</div>
+			<EditRecordModal
+				record={selectedRecord}
+				showModal={showEditRecordModal}
+				onSubmit={onSaveEdit}
+				on:close={() => (showEditRecordModal = false)}
+			/>
 		{/if}
 	</section>
 </div>
@@ -101,19 +114,5 @@
 <NewRecordModal
 	showModal={showNewRecordModal}
 	on:close={() => (showNewRecordModal = false)}
-	onSubmit={() => {
-		showNewRecordModal = false;
-	}}
+	onSubmit={() => (showNewRecordModal = false)}
 />
-{#if selectedRecord}
-	<EditRecordModal
-		record={selectedRecord}
-		showModal={showEditRecordModal}
-		on:close={() => {
-			showEditRecordModal = false;
-		}}
-		onSubmit={() => {
-			showEditRecordModal = false;
-		}}
-	/>
-{/if}

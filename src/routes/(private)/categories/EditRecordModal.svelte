@@ -7,28 +7,32 @@
 
 	export let record: Category;
 	export let showModal: boolean;
-	export let onSubmit = () => {};
+	export let onSubmit = (name: string, color: string) => {};
 
-	let enteredName = record.name;
-	let enteredColor = record.color;
+	export let defaultName = '';
+	export let defaultColor = '#AAB7B8';
+
+	$: enteredName = record.name;
+	$: enteredColor = record.color;
 
 	function resetFields() {
-		enteredName = '';
-		enteredColor = '#AAB7B8';
+		enteredName = defaultName;
+		enteredColor = defaultColor;
+	}
+
+	async function onNameChange(event: Event) {
+		const name = (event.target as HTMLInputElement).value;
+		enteredName = name;
+	}
+
+	async function onColorChange(event: Event) {
+		const color = (event.target as HTMLInputElement).value;
+		console.log('whut', color);
+		enteredColor = color;
 	}
 
 	async function handleSubmit() {
-		await fetch('/api/categories', {
-			method: 'PATCH',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				id: record.id,
-				name: enteredName,
-				color: enteredColor
-			})
-		});
-
-		onSubmit();
+		onSubmit(enteredName, enteredColor);
 		resetFields();
 	}
 </script>
@@ -36,9 +40,8 @@
 <Modal show={showModal} on:close>
 	<h2 slot="header">Edit category</h2>
 	<form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-y-4">
-		<TextInput label="Name" bind:value={enteredName} isRequired />
-		<ColorInput label="Color" bind:value={enteredColor} isRequired />
-
+		<TextInput label="Name" value={enteredName} onChange={onNameChange} isRequired />
+		<ColorInput label="Color" value={enteredColor} onChange={onColorChange} isRequired />
 		<Button type="submit" text="Save" isDisabled={!enteredName || !enteredColor} />
 	</form>
 </Modal>
