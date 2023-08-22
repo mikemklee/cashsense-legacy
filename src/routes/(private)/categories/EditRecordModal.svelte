@@ -9,16 +9,8 @@
 	export let showModal: boolean;
 	export let onSubmit = (name: string, color: string) => {};
 
-	export let defaultName = '';
-	export let defaultColor = '#AAB7B8';
-
 	$: enteredName = record.name;
 	$: enteredColor = record.color;
-
-	function resetFields() {
-		enteredName = defaultName;
-		enteredColor = defaultColor;
-	}
 
 	async function onNameChange(event: Event) {
 		const name = (event.target as HTMLInputElement).value;
@@ -27,13 +19,11 @@
 
 	async function onColorChange(event: Event) {
 		const color = (event.target as HTMLInputElement).value;
-		console.log('whut', color);
 		enteredColor = color;
 	}
 
 	async function handleSubmit() {
 		onSubmit(enteredName, enteredColor);
-		resetFields();
 	}
 </script>
 

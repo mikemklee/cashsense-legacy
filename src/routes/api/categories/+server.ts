@@ -49,6 +49,7 @@ export async function PATCH({ request, locals: { supabase, getSession } }) {
     })
     .eq('id', id)
     .eq('profile_id', session.user.id)
+    .select()
 
   if (updateError) {
     throw error(statusCode, 'Unexpected error while updating category')

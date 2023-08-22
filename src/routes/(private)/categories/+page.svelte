@@ -5,7 +5,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import CategoryTag from '$lib/components/CategoryTag.svelte';
 	import Heading from '$lib/components/Heading.svelte';
-	import categoryStore from '$lib/stores/categoryStore';
+	import categoryStore from '$lib/stores/categories';
 	import type { Category } from '$lib/types';
 	import EditRecordModal from './EditRecordModal.svelte';
 	import NewRecordModal from './NewRecordModal.svelte';
@@ -42,14 +42,10 @@
 
 		if (!selectedRecord) return;
 
-		await fetch('/api/categories', {
-			method: 'PATCH',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				id: selectedRecord.id,
-				name: enteredName,
-				color: enteredColor
-			})
+		await categoryStore.updateCategory({
+			id: selectedRecord.id,
+			name: enteredName,
+			color: enteredColor
 		});
 	}
 

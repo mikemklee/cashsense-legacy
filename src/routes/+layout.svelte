@@ -8,7 +8,7 @@
 	import '../app.css';
 	import ScrollToTop from '$lib/components/ScrollToTop.svelte';
 	import accountStore from '$lib/stores/accountStore';
-	import categoryStore from '$lib/stores/categoryStore';
+	import categoryStore from '$lib/stores/categories';
 	import { Toaster } from 'svelte-french-toast';
 	import { getSiteName } from '$lib/utils/env';
 

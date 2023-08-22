@@ -14,7 +14,7 @@
 	import DataTable from '$lib/components/table/DataTable.svelte';
 	import DateCell from '$lib/components/table/DateCell.svelte';
 	import accountStore from '$lib/stores/accountStore';
-	import categoryStore from '$lib/stores/categoryStore';
+	import categoryStore from '$lib/stores/categories';
 	import transactionStore from '$lib/stores/transactions';
 	import type { Account, Category, LiftedTransaction } from '$lib/types';
 	import NewTransactionPanel from './NewTransactionPanel.svelte';

@@ -13,7 +13,7 @@
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
 	import type { Account, Category } from '$lib/types';
 	import accountStore from '$lib/stores/accountStore';
-	import categoryStore from '$lib/stores/categoryStore';
+	import categoryStore from '$lib/stores/categories';
 
 	export let showPanel: boolean;
 	export let onClose = () => {};

@@ -9,7 +9,7 @@
 	import SelectInput, { type Option } from '$lib/components/inputs/SelectInput.svelte';
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
 	import accountStore from '$lib/stores/accountStore';
-	import categoryStore from '$lib/stores/categoryStore';
+	import categoryStore from '$lib/stores/categories';
 	import transactionStore from '$lib/stores/transactions';
 	import type { Account, Category, LiftedTransaction } from '$lib/types';
 
