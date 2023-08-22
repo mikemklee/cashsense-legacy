@@ -22,7 +22,7 @@
 	import TransactionDetails from './TransactionDetails.svelte';
 
 	let transactions: LiftedTransaction[] = [];
-	let selectedStartDate: Date | null = startOfMonth(new Date('2023-07-02'));
+	let selectedStartDate: Date | null = startOfMonth(new Date());
 	let selectedEndDate: Date | null = new Date();
 
 	let showCollapsible = false;
