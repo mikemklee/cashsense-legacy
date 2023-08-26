@@ -7,8 +7,8 @@
 	import Heading from '$lib/components/Heading.svelte';
 	import categoryStore from '$lib/stores/categories';
 	import type { Category } from '$lib/types';
-	import EditRecordModal from './EditRecordModal.svelte';
-	import NewRecordModal from './NewRecordModal.svelte';
+	import EditRecordModal from './EditCategoryModal.svelte';
+	import NewRecordModal from './NewCategoryModal.svelte';
 
 	let categories: Category[] = [];
 
