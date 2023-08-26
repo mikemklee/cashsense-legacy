@@ -22,7 +22,7 @@
 	import TransactionInsights from './TransactionInsights.svelte';
 
 	let transactions: LiftedTransaction[] = [];
-	let selectedStartDate: Date | null = startOfMonth(new Date());
+	let selectedStartDate: Date | null = startOfMonth(new Date('2023-01-02'));
 	let selectedEndDate: Date | null = new Date();
 
 	let searchValue = '';
@@ -121,9 +121,7 @@
 
 	const unsubscribeFromCategoryStore = categoryStore.subscribe((state) => {
 		categories = state.data;
-		selectedCategories = categories
-			.map((category: Category) => category.id)
-			.filter((id: string) => id !== '9723abaa-de74-468e-bb77-62235cf2ea0b');
+		selectedCategories = categories.map((category: Category) => category.id);
 	});
 
 	const unsubscribeFromTransactionStore = transactionStore.subscribe((state) => {
@@ -208,13 +206,35 @@
 				<Heading size="md">Categories</Heading>
 
 				{#if categories.length > 0}
-					<div class="my-2 flex flex-wrap gap-2">
+					<div class="my-2 flex flex-col gap-2">
 						{#each categories as category}
 							<Selectable
 								on:click={() => onSelectCategoryFilterItem(category.id)}
 								isSelected={selectedCategories.includes(category.id)}
 							>
-								<CategoryTag color={category.color} name={category.name} />
+								<div class="h-8 flex justify-between items-center w-full">
+									<CategoryTag color={category.color} name={category.name} />
+									{#if selectedCategories.includes(category.id) && selectedCategories.length === 1}
+										<!-- Option to select all, if this is the only one selected -->
+										<button
+											class="ml-auto opacity-10 text-sm hover:opacity-100"
+											on:click|stopPropagation={onSelectAllCategories}
+										>
+											All
+										</button>
+									{:else}
+										<!-- Otherwise, give option to select only this one -->
+										<button
+											class="ml-auto opacity-10 text-sm hover:opacity-100"
+											on:click|stopPropagation={() => {
+												onClearAllCategories();
+												onSelectCategoryFilterItem(category.id);
+											}}
+										>
+											Only
+										</button>
+									{/if}
+								</div>
 							</Selectable>
 						{/each}
 					</div>
