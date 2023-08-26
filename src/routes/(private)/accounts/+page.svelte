@@ -2,18 +2,19 @@
 	import Icon from '@iconify/svelte';
 	import { onDestroy } from 'svelte';
 
-	import toast from 'svelte-french-toast';
-
 	import Button from '$lib/components/Button.svelte';
 	import Heading from '$lib/components/Heading.svelte';
 	import accountStore from '$lib/stores/accountStore';
 	import type { Account } from '$lib/types';
 	import { humanizeAccountType } from '$lib/utils/format';
 	import NewAccountModal from './NewAccountModal.svelte';
+	import DeleteAccountModal from './DeleteAccountModal.svelte';
 
 	let accounts: Account[] = [];
-	let showNewAccountModal = false;
+
 	let selectedAccount: Account | undefined = undefined;
+	let showNewAccountModal = false;
+	let showDeleteAccountModal = false;
 
 	const unsubscribeFromAccountStore = accountStore.subscribe((state) => {
 		accounts = state.data;
@@ -29,21 +30,10 @@
 		selectedAccount = account;
 	}
 
-	async function onDeleteAccount(accountId?: string) {
-		if (!accountId) return;
-
-		try {
-			const response = await fetch(`/api/accounts?id=${accountId}`, {
-				method: 'DELETE'
-			});
-			if (response.ok) {
-				toast.success('Account deleted');
-			} else {
-				throw response;
-			}
-		} catch (error) {
-			toast.error('Something went wrong while deleting account');
-		}
+	async function onDeleteAccount(id?: string) {
+		showDeleteAccountModal = false;
+		if (!id) return;
+		await accountStore.deleteAccount(id);
 	}
 </script>
 
@@ -94,13 +84,15 @@
 					{selectedAccount.name}
 				</div>
 				<div class="ml-auto">
-					<Button
-						text="Delete"
-						onClick={() => onDeleteAccount(selectedAccount?.id)}
-						style="alert"
-					/>
+					<Button text="Delete" onClick={() => (showDeleteAccountModal = true)} style="alert" />
 				</div>
 			</div>
+			<DeleteAccountModal
+				account={selectedAccount}
+				showModal={showDeleteAccountModal}
+				onSubmit={onDeleteAccount}
+				on:close={() => (showDeleteAccountModal = false)}
+			/>
 		{/if}
 	</section>
 </div>
