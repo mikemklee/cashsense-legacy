@@ -244,7 +244,7 @@
 				</div>
 			{/each}
 		{:else}
-			<span class="text-sm text-gray-400">This transaction was not adjusted</span>
+			<span class="text-sm text-gray-400">No adjustments to show.</span>
 		{/if}
 	</div>
 

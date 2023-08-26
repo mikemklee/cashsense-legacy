@@ -49,7 +49,7 @@
 
 <div class="flex h-full">
 	<!-- Side -->
-	<section class="border-r border-r-gray-700 w-[380px]">
+	<section class="border-r border-r-gray-700 w-[340px]">
 		<div class="p-6 border-b border-b-gray-700 flex items-center justify-between">
 			<Heading isSnug>Accounts</Heading>
 			<Button text="New account" onClick={() => (showNewAccountModal = true)} />
