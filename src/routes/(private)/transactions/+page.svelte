@@ -17,6 +17,7 @@
 	import categoryStore from '$lib/stores/categories';
 	import transactionStore from '$lib/stores/transactions';
 	import type { Account, Category, LiftedTransaction } from '$lib/types';
+	import { humanizeAccountType } from '$lib/utils/format';
 	import NewTransactionPanel from './NewTransactionPanel.svelte';
 	import TransactionDetails from './TransactionDetails.svelte';
 	import TransactionInsights from './TransactionInsights.svelte';
@@ -163,17 +164,6 @@
 			cell: () => AmountCell
 		}
 	];
-
-	const humanizeAccountType = (type: string) => {
-		switch (type) {
-			case 'bank_account':
-				return 'Bank account';
-			case 'credit_card':
-				return 'Credit card';
-			default:
-				return 'Unknown';
-		}
-	};
 </script>
 
 <div class="flex h-full">

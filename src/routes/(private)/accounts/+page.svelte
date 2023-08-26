@@ -8,6 +8,7 @@
 	import Heading from '$lib/components/Heading.svelte';
 	import accountStore from '$lib/stores/accountStore';
 	import type { Account } from '$lib/types';
+	import { humanizeAccountType } from '$lib/utils/format';
 	import NewAccountModal from './NewAccountModal.svelte';
 
 	let accounts: Account[] = [];
@@ -44,17 +45,6 @@
 			toast.error('Something went wrong while deleting account');
 		}
 	}
-
-	const humanizeAccountType = (type: string) => {
-		switch (type) {
-			case 'bank_account':
-				return 'Bank account';
-			case 'credit_card':
-				return 'Credit card';
-			default:
-				return 'Unknown';
-		}
-	};
 </script>
 
 <div class="flex h-full">
