@@ -21,6 +21,7 @@ export async function POST({ request, locals: { supabase, getSession } }) {
       color,
       profile_id: session.user.id,
     })
+    .select()
 
   if (insertError) {
     throw error(statusCode, 'Unexpected error while adding new category')

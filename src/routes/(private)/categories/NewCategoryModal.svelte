@@ -1,8 +1,9 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
 	import Modal from '$lib/components/Modal.svelte';
-	import TextInput from '$lib/components/inputs/TextInput.svelte';
 	import ColorInput from '$lib/components/inputs/ColorInput.svelte';
+	import TextInput from '$lib/components/inputs/TextInput.svelte';
+	import categoryStore from '$lib/stores/categories';
 
 	export let showModal: boolean;
 	export let onSubmit = () => {};
@@ -16,13 +17,9 @@
 	}
 
 	async function handleSubmit() {
-		await fetch('/api/categories', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				name: enteredName,
-				color: enteredColor
-			})
+		await categoryStore.createCategory({
+			name: enteredName,
+			color: enteredColor
 		});
 
 		onSubmit();

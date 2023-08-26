@@ -17,6 +17,7 @@ const createStore = <T>() => {
 
   const fetchCategories = async () => {
     update((state) => ({ ...state, loading: true, error: null }));
+
     try {
       const response = await fetch('/api/categories');
       const data = await response.json();
@@ -24,12 +25,41 @@ const createStore = <T>() => {
       update((state) => ({ ...state, data, loading: false }));
       return data;
     } catch (error) {
+      console.error(error)
       update((state) => ({ ...state, loading: false, error: error as Error, }));
+    }
+  }
+
+  const createCategory = async (createData: any) => {
+    update((state) => ({ ...state, loading: true, error: null }));
+
+    try {
+      const response = await fetch('/api/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(createData)
+      });
+
+      const [createdCategory] = await response.json();
+
+      update((state) => ({
+        ...state, data: [
+          ...state.data,
+          createdCategory
+        ], loading: false,
+      }));
+
+      toast.success(`Category created`);
+    } catch (error) {
+      console.error(error)
+      update((state) => ({ ...state, loading: false, error: error as Error }));
+      toast.error(`Something went wrong while creating category`);
     }
   }
 
   const updateCategory = async (updateData: any) => {
     update((state) => ({ ...state, loading: true, error: null }));
+
     try {
       const response = await fetch('/api/categories', {
         method: 'PATCH',
@@ -50,12 +80,14 @@ const createStore = <T>() => {
 
       toast.success(`Category updated`);
     } catch (error) {
+      console.error(error)
       update((state) => ({ ...state, loading: false, error: error as Error }));
       toast.error(`Something went wrong while updating category`);
     }
   }
 
   return {
+    createCategory,
     fetchCategories,
     updateCategory,
     subscribe,
