@@ -1,4 +1,5 @@
 import { error, json } from '@sveltejs/kit';
+import { v4 as uuid } from 'uuid';
 
 import type { TransactionAdjustment } from '$lib/types/index.js';
 
@@ -27,4 +28,46 @@ export async function GET({ url, locals: { supabase, getSession } }) {
   } else {
     return json(transaction_adjustments)
   }
+}
+
+export async function PUT({ request, locals: { supabase, getSession } }) {
+  const session = await getSession()
+  if (!session) {
+    throw error(401, 'Unauthorized');
+  }
+
+  const { transactionId, adjustments } = await request.json();
+
+  const upsertDocuments: any = []
+
+  adjustments.forEach((adjustment: any) => {
+    if (adjustment.id) {
+      upsertDocuments.push(adjustment)
+    } else {
+      upsertDocuments.push({
+        ...adjustment,
+        id: uuid(),
+        transaction_id: transactionId,
+      })
+    }
+  })
+
+  console.log(upsertDocuments)
+
+  // bulk upsert
+  const {
+    data,
+    error: upsertError,
+    status: statusCode,
+  } = await supabase
+    .from('transaction_adjustments')
+    .upsert(upsertDocuments)
+
+  if (upsertError) {
+    console.error(upsertError)
+    throw error(statusCode, 'Unexpected error while upserting transaction adjustments')
+  } else {
+    return json(data)
+  }
+
 }

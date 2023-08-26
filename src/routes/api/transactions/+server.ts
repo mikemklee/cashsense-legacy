@@ -59,7 +59,8 @@ export async function PATCH({ request, locals: { supabase, getSession } }) {
     .select(`
       *,
       account:accounts (id, name),
-      category:categories (id, name, color)
+      category:categories (id, name, color),
+      adjustments:transaction_adjustments (*)
     `)
 
   if (updateError) {

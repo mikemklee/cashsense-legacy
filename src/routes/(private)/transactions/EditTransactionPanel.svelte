@@ -9,8 +9,10 @@
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
 	import accountStore from '$lib/stores/accountStore';
 	import categoryStore from '$lib/stores/categories';
+	import type { Account, Category, LiftedTransaction, TransactionAdjustment } from '$lib/types';
+	import Heading from '$lib/components/Heading.svelte';
+	import Icon from '@iconify/svelte';
 	import transactionStore from '$lib/stores/transactions';
-	import type { Account, Category, LiftedTransaction } from '$lib/types';
 
 	export let transaction: LiftedTransaction;
 	export let onClose = () => {};
@@ -26,6 +28,16 @@
 
 	let selectedAccount = '';
 	let accountOptions: Option[] = [];
+
+	type Adjustment = {
+		id?: string;
+		is_adjusted: boolean;
+		description: string;
+		amount: number;
+		direction: string;
+	};
+
+	let adjustmentsData: Adjustment[] = [];
 
 	const unsubscribeFromCategoryStore = categoryStore.subscribe((state) => {
 		categoryOptions = state.data.map((category: Category) => ({
@@ -54,6 +66,14 @@
 		enteredAmount = Math.abs(transaction.amount) / 100;
 		selectedCategory = transaction.category_id;
 		selectedAccount = transaction.account_id;
+
+		adjustmentsData = transaction.adjustments.map((adjustment) => ({
+			id: adjustment.id,
+			is_adjusted: adjustment.is_adjusted,
+			description: adjustment.description,
+			amount: Math.abs(adjustment.amount) / 100,
+			direction: adjustment.amount < 0 ? '-1' : '1'
+		}));
 	});
 
 	onDestroy(() => {
@@ -75,18 +95,31 @@
 		if (accountOptions.length > 0) {
 			selectedAccount = accountOptions[0].value;
 		}
+
+		adjustmentsData = [];
+	}
+
+	function formatAmountForSave(rawDollarAmount: number, direction = '1') {
+		const amountInCents = Math.round(rawDollarAmount * 100);
+		return direction === '-1' ? -amountInCents : amountInCents;
 	}
 
 	async function handleSubmit() {
-		const rawDollarAmount = enteredAmount;
-		const amountInCents = Math.round(rawDollarAmount * 100);
-		const centsWithDirection = selectedDirection === '-1' ? -amountInCents : amountInCents;
+		const formattedAdjustments = adjustmentsData.map((adjustment) => ({
+			id: adjustment.id,
+			description: adjustment.description,
+			is_adjusted: adjustment.is_adjusted,
+			amount: formatAmountForSave(adjustment.amount, adjustment.direction),
+			transaction_id: transaction.id
+		}));
+
+		await transactionStore.updateTransactionAdjustments(transaction.id, formattedAdjustments);
 
 		await transactionStore.updateTransaction({
 			id: transaction.id,
 			posted_at: new Date(selectedDate),
 			description: enteredDescription,
-			amount: centsWithDirection,
+			amount: formatAmountForSave(enteredAmount, selectedDirection),
 			category_id: selectedCategory,
 			account_id: selectedAccount
 		});
@@ -94,6 +127,11 @@
 		onSubmit();
 		resetFields();
 	}
+
+	const onRemoveAdjustment = (id?: string) => {
+		if (!id) return;
+		adjustmentsData = adjustmentsData.filter((adjustment) => adjustment.id !== id);
+	};
 </script>
 
 <div class="flex flex-col gap-y-4 px-6">
@@ -133,6 +171,28 @@
 		options={categoryOptions}
 		bind:value={selectedCategory}
 	/>
+
+	{#if adjustmentsData}
+		<div class="flex flex-col gap-y-2 my-4">
+			<div class="flex items-center justify-between">
+				<Heading isSnug size="md">Edit adjustments</Heading>
+				<button>Add</button>
+			</div>
+			{#each adjustmentsData as adjustment}
+				<div class="flex items-center">
+					<div class="grow mr-4">
+						<TextInput label="Description" bind:value={adjustment.description} isRequired />
+					</div>
+					<div class="grow mr-4">
+						<NumberInput label="Amount" bind:value={adjustment.amount} isRequired />
+					</div>
+					<button on:click={() => onRemoveAdjustment(adjustment?.id)}>
+						<Icon icon="tabler:x" class="w-6 h-6 mt-4 shrink" />
+					</button>
+				</div>
+			{/each}
+		</div>
+	{/if}
 
 	<div class="flex justify-end gap-4 mt-4">
 		<Button text="Cancel" style="secondary" onClick={onClose} />
