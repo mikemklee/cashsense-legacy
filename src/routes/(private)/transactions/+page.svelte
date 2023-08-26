@@ -21,9 +21,7 @@
 	let transactions: LiftedTransaction[] = [];
 	let selectedStartDate: Date | null = startOfMonth(new Date('2023-01-02'));
 	let selectedEndDate: Date | null = new Date();
-
 	let searchValue = '';
-
 	let timer: NodeJS.Timeout;
 
 	const debounce = (value: string) => {
@@ -66,18 +64,14 @@
 		} else {
 			selectedAccounts = [...selectedAccounts, accountId];
 		}
-
-		await fetchTransactions();
 	}
 
 	async function onClearAllAccounts() {
 		selectedAccounts = [];
-		await fetchTransactions();
 	}
 
 	async function onSelectAllAccounts() {
 		selectedAccounts = accounts.map((account) => account.id);
-		await fetchTransactions();
 	}
 
 	let categories: Category[] = [];
@@ -89,21 +83,18 @@
 		} else {
 			selectedCategories = [...selectedCategories, categoryId];
 		}
-
-		await fetchTransactions();
 	}
 
 	async function onClearAllCategories() {
 		selectedCategories = [];
-		await fetchTransactions();
 	}
 
 	async function onSelectAllCategories() {
 		selectedCategories = categories.map((category) => category.id);
-		await fetchTransactions();
 	}
 
-	$: if (selectedAccounts.length > 0 && selectedCategories.length > 0) {
+	$: if (selectedAccounts.length > 0 && selectedCategories.length > 0 && !transactions.length) {
+		// initial load
 		fetchTransactions();
 	}
 
@@ -122,11 +113,7 @@
 	});
 
 	const unsubscribeFromTransactionStore = transactionStore.subscribe((state) => {
-		transactions = state.data.filter(
-			(transaction: LiftedTransaction) =>
-				selectedCategories.includes(transaction.category_id) &&
-				selectedAccounts.includes(transaction.account_id)
-		);
+		transactions = state.data;
 	});
 
 	onDestroy(() => {
@@ -134,6 +121,12 @@
 		unsubscribeFromCategoryStore();
 		unsubscribeFromTransactionStore();
 	});
+
+	$: displayedTransactions = transactions.filter(
+		(transaction: LiftedTransaction) =>
+			selectedCategories.includes(transaction.category_id) &&
+			selectedAccounts.includes(transaction.account_id)
+	);
 </script>
 
 <div class="flex h-full">
@@ -188,8 +181,8 @@
 	<div class="relative flex-grow">
 		<TransactionDetails transaction={selectedTransaction} onDeselect={onDeselectTransaction} />
 		<section class="p-6 pr-12">
-			{#if transactions.length > 0}
-				<TransactionInsights {transactions} />
+			{#if displayedTransactions.length > 0}
+				<TransactionInsights transactions={displayedTransactions} />
 			{/if}
 
 			<div>
@@ -210,10 +203,10 @@
 						/>
 					</div>
 				</div>
-				{#if transactions.length > 0}
+				{#if displayedTransactions.length > 0}
 					<DataTable
 						defaultColumns={TRANSACTION_TABLE_COLUMNS}
-						defaultData={transactions}
+						defaultData={displayedTransactions}
 						selectedItem={selectedTransaction}
 						handleRowSelect={onSelectTransaction}
 					/>
