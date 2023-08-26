@@ -1,16 +1,13 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
-
 	import AmountSpan from '$lib/components/AmountSpan.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import CategoryTag from '$lib/components/CategoryTag.svelte';
 	import DateSpan from '$lib/components/DateSpan.svelte';
 	import Drawer from '$lib/components/Drawer.svelte';
 	import Heading from '$lib/components/Heading.svelte';
+	import transactionStore from '$lib/stores/transactions';
 	import type { LiftedTransaction } from '$lib/types';
-
 	import EditTransactionPanel from './EditTransactionPanel.svelte';
-	import toast from 'svelte-french-toast';
 
 	export let transaction: LiftedTransaction;
 
@@ -21,14 +18,9 @@
 
 	export let onDeselect = () => {};
 
-	// TODO: use transaction store
 	const onDelete = async (transactionId?: string) => {
-		await fetch(`/api/transactions?id=${transactionId}`, {
-			method: 'DELETE'
-		});
-
-		toast.success('Transaction record deleted');
-
+		if (!transactionId) return;
+		await transactionStore.deleteTransaction(transactionId);
 		handleDeselect();
 	};
 

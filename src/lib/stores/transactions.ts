@@ -99,6 +99,31 @@ const createStore = <T>() => {
     }
   }
 
+  const deleteTransaction = async (id: string) => {
+    update((state) => ({ ...state, loading: true, error: null }));
+
+    try {
+      const response = await fetch(`/api/transactions?id=${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        update((state) => {
+          const updatedData = state.data.filter((category) => category.id !== id);
+          return { ...state, data: updatedData, loading: false }
+        });
+
+        toast.success(`Transaction record deleted`);
+      } else {
+        throw response
+      }
+    } catch (error) {
+      console.error(error)
+      update((state) => ({ ...state, loading: false, error: error as Error }));
+      toast.error(`Something went wrong while deleting transaction record`);
+    }
+  }
+
   const upsertTransactionAdjustments = async (updateData: any) => {
     update((state) => ({ ...state, loading: true, error: null }));
     try {
@@ -129,6 +154,7 @@ const createStore = <T>() => {
     createTransaction,
     fetchTransactions,
     updateTransaction,
+    deleteTransaction,
     upsertTransactionAdjustments,
     deleteTransactionAdjustments,
     subscribe,
