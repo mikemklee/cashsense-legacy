@@ -210,7 +210,11 @@
 		</div>
 		{#if adjustmentsData.length > 0}
 			{#each adjustmentsData as adjustment}
-				<div class="flex items-end">
+				<div
+					class="flex items-end {adjustmentsToDelete.includes(adjustment.id)
+						? 'opacity-25'
+						: 'opacity-100'}"
+				>
 					<div class="grow mr-4">
 						<TextInput label="Description" bind:value={adjustment.description} isRequired />
 					</div>
