@@ -1,12 +1,9 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
 	import { format as dateFormat, startOfMonth } from 'date-fns';
 	import { onDestroy } from 'svelte';
 
 	import Button from '$lib/components/Button.svelte';
-	import CategoryTag from '$lib/components/CategoryTag.svelte';
 	import Heading from '$lib/components/Heading.svelte';
-	import Selectable from '$lib/components/Selectable.svelte';
 	import DateInput from '$lib/components/inputs/DateInput.svelte';
 	import SearchInput from '$lib/components/inputs/SearchInput.svelte';
 	import DataTable from '$lib/components/table/DataTable.svelte';
@@ -14,8 +11,9 @@
 	import categoryStore from '$lib/stores/categories';
 	import transactionStore from '$lib/stores/transactions';
 	import type { Account, Category, LiftedTransaction } from '$lib/types';
-	import AccountsFilter from './AccountsFilter.svelte';
 	import { TRANSACTION_TABLE_COLUMNS } from '$lib/utils/table';
+	import AccountsFilter from './AccountsFilter.svelte';
+	import CategoriesFilter from './CategoriesFilter.svelte';
 	import NewTransactionPanel from './NewTransactionPanel.svelte';
 	import TransactionDetails from './TransactionDetails.svelte';
 	import TransactionInsights from './TransactionInsights.svelte';
@@ -165,72 +163,13 @@
 			</div>
 
 			<div class="mt-6">
-				<Heading size="md">Categories</Heading>
-
-				{#if categories.length > 0}
-					<div class="my-2 flex flex-col gap-2">
-						{#each categories as category}
-							<Selectable
-								on:click={() => onSelectCategoryFilterItem(category.id)}
-								isSelected={selectedCategories.includes(category.id)}
-							>
-								<div class="h-8 flex justify-between items-center w-full">
-									<CategoryTag color={category.color} name={category.name} />
-									{#if selectedCategories.includes(category.id) && selectedCategories.length === 1}
-										<!-- Option to select all, if this is the only one selected -->
-										<button
-											class="ml-auto opacity-10 text-sm hover:opacity-100"
-											on:click|stopPropagation={onSelectAllCategories}
-										>
-											All
-										</button>
-									{:else}
-										<!-- Otherwise, give option to select only this one -->
-										<button
-											class="ml-auto opacity-10 text-sm hover:opacity-100"
-											on:click|stopPropagation={() => {
-												onClearAllCategories();
-												onSelectCategoryFilterItem(category.id);
-											}}
-										>
-											Only
-										</button>
-									{/if}
-								</div>
-							</Selectable>
-						{/each}
-					</div>
-
-					<div class="flex justify-between">
-						<span class="text-sm text-gray-400">
-							{selectedCategories.length} categories selected
-						</span>
-						{#if selectedCategories.length > 0}
-							<button
-								class="ml-auto text-sm text-indigo-400 cursor-pointer hover:text-indigo-300 transition-colors"
-								on:click={onClearAllCategories}>Clear all</button
-							>
-						{:else}
-							<button
-								class="ml-auto text-sm text-indigo-400 cursor-pointer hover:text-indigo-300 transition-colors"
-								on:click={onSelectAllCategories}>Select all</button
-							>
-						{/if}
-					</div>
-				{:else}
-					<div class="text-sm text-gray-400">
-						<span>You don't have any categories yet.</span>
-						<span class="flex items-center">
-							<a
-								href="/categories"
-								class="text-indigo-400 hover:text-indigo-300 transition-colors flex items-center"
-							>
-								Add one here
-								<Icon icon="tabler:arrow-right" class="inline-block text-lg" />
-							</a>
-						</span>
-					</div>
-				{/if}
+				<CategoriesFilter
+					{selectedCategories}
+					{categories}
+					{onSelectCategoryFilterItem}
+					{onClearAllCategories}
+					{onSelectAllCategories}
+				/>
 			</div>
 
 			<div class="mt-6">
