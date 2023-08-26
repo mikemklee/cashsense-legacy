@@ -37,7 +37,7 @@
 		debounce(target.value);
 	}
 
-	let showCollapsible = false;
+	let showNewRecordPanel = false;
 	let selectedTransaction: LiftedTransaction | null = null;
 
 	$: formattedStartDate = selectedStartDate ? dateFormat(selectedStartDate, 'yyyy-MM-dd') : '';
@@ -136,14 +136,14 @@
 			<Heading isSnug>Transactions</Heading>
 			<Button
 				text="New record"
-				onClick={() => (showCollapsible = !showCollapsible)}
+				onClick={() => (showNewRecordPanel = !showNewRecordPanel)}
 				isDisabled={isNewRecordDisabled}
 			/>
 		</div>
 
 		<NewTransactionPanel
-			showPanel={showCollapsible}
-			onClose={() => (showCollapsible = false)}
+			showPanel={showNewRecordPanel}
+			onClose={() => (showNewRecordPanel = false)}
 			onSubmit={fetchTransactions}
 		/>
 
