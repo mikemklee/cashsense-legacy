@@ -7,13 +7,16 @@
 	import DateSpan from '$lib/components/DateSpan.svelte';
 	import Drawer from '$lib/components/Drawer.svelte';
 	import Heading from '$lib/components/Heading.svelte';
-	import type { LiftedTransaction } from '$lib/types';
+	import type { LiftedTransaction, TransactionAdjustment } from '$lib/types';
 
 	import EditTransactionPanel from './EditTransactionPanel.svelte';
 	import toast from 'svelte-french-toast';
+	import { onMount } from 'svelte';
+
+	export let transaction: LiftedTransaction;
 
 	let showEditPanel = false;
-	export let transaction: LiftedTransaction | null = null;
+	let adjustments: TransactionAdjustment[] = [];
 
 	export let onDeselect = () => {};
 
@@ -32,6 +35,17 @@
 		showEditPanel = false;
 		onDeselect();
 	};
+
+	const fetchTransactionAdjustments = async () => {
+		const response = await fetch(`/api/transaction_adjustments?id=${transaction.id}`);
+		const data = await response.json();
+
+		adjustments = data;
+	};
+
+	onMount(() => {
+		fetchTransactionAdjustments();
+	});
 </script>
 
 <Drawer show={!!transaction} onClose={handleDeselect}>
@@ -45,7 +59,7 @@
 		</Heading>
 	</div>
 
-	{#if transaction && !showEditPanel}
+	{#if !showEditPanel}
 		<div class="px-6 flex flex-col gap-2">
 			<div>
 				<span class="text-sm text-gray-400">Date</span>
@@ -75,9 +89,22 @@
 
 		<div class="flex justify-end px-6 gap-4 mt-4">
 			<Button text="Edit" style="secondary" onClick={() => (showEditPanel = true)} />
-			<Button text="Delete" style="alert" onClick={() => onDelete(transaction?.id)} />
+			<Button text="Delete" style="alert" onClick={() => onDelete(transaction.id)} />
 		</div>
-	{:else if transaction && showEditPanel}
+
+		{#if adjustments}
+			<div class="px-6 mt-6">
+				<Heading size="lg">Adjustments</Heading>
+				{#each adjustments as adjustment}
+					<div class="flex">
+						<!-- <input type="checkbox" checked={adjustment.is_adjusted} /> -->
+						<div class="mr-2">{adjustment.description}</div>
+						<AmountSpan value={adjustment.amount} />
+					</div>
+				{/each}
+			</div>
+		{/if}
+	{:else}
 		<EditTransactionPanel
 			{transaction}
 			onClose={() => (showEditPanel = false)}

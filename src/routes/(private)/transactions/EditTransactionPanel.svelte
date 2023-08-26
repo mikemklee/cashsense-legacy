@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { format } from 'date-fns';
 	import { onDestroy, onMount } from 'svelte';
-	import toast from 'svelte-french-toast';
 
 	import Button from '$lib/components/Button.svelte';
 	import DateInput from '$lib/components/inputs/DateInput.svelte';
