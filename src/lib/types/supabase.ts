@@ -114,6 +114,43 @@ export interface Database {
           }
         ]
       }
+      transaction_adjustments: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string
+          id: string
+          is_adjusted: boolean
+          transaction_id: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          description?: string
+          id?: string
+          is_adjusted?: boolean
+          transaction_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string
+          id?: string
+          is_adjusted?: boolean
+          transaction_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transaction_adjustments_transaction_id_fkey"
+            columns: ["transaction_id"]
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       transactions: {
         Row: {
           account_id: string
