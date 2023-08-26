@@ -97,7 +97,8 @@ export async function GET({ url, locals: { supabase } }) {
     .select(`
       *,
       account:accounts (id, name),
-      category:categories (id, name, color)
+      category:categories (id, name, color),
+      adjustments:transaction_adjustments (*)
     `)
 
   if (searchTerm) {
@@ -119,7 +120,16 @@ export async function GET({ url, locals: { supabase } }) {
 
   query = query.order('posted_at', { ascending: false })
 
-  const { data: transactions } = await query.returns<LiftedTransaction[]>()
+  const {
+    data: transactions,
+    error: fetchError,
+    status: statusCode,
+  } = await query.returns<LiftedTransaction[]>()
+
+  if (fetchError) {
+    console.error(fetchError)
+    throw error(statusCode, 'Unexpected error while fetching transactions')
+  }
 
   return json(transactions)
 }

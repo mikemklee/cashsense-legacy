@@ -7,17 +7,17 @@
 	import DateSpan from '$lib/components/DateSpan.svelte';
 	import Drawer from '$lib/components/Drawer.svelte';
 	import Heading from '$lib/components/Heading.svelte';
-	import type { LiftedTransaction, TransactionAdjustment } from '$lib/types';
+	import type { LiftedTransaction } from '$lib/types';
 
 	import EditTransactionPanel from './EditTransactionPanel.svelte';
 	import toast from 'svelte-french-toast';
-	import { onMount } from 'svelte';
 
 	export let transaction: LiftedTransaction;
 
 	let showEditPanel = false;
-	let adjustments: TransactionAdjustment[] = [];
-	let adjustedTransactionAmount: number;
+	let adjustedTransactionAmount =
+		transaction.amount +
+		transaction.adjustments.reduce((acc, adjustment) => acc + adjustment.amount, 0);
 
 	export let onDeselect = () => {};
 
@@ -36,19 +36,6 @@
 		showEditPanel = false;
 		onDeselect();
 	};
-
-	const fetchTransactionAdjustments = async () => {
-		const response = await fetch(`/api/transaction_adjustments?id=${transaction.id}`);
-		const data = await response.json();
-
-		adjustments = data;
-		adjustedTransactionAmount =
-			transaction.amount + adjustments.reduce((acc, adjustment) => acc + adjustment.amount, 0);
-	};
-
-	onMount(() => {
-		fetchTransactionAdjustments();
-	});
 </script>
 
 <Drawer onClose={handleDeselect}>
@@ -90,7 +77,7 @@
 				</div>
 			</div>
 
-			{#if adjustments.length > 0}
+			{#if transaction.adjustments.length > 0}
 				<div class="mt-2">
 					<div>
 						<div class="flex items-center gap-4">
@@ -98,7 +85,7 @@
 							<div class="border-t border-gray-700 w-full full" />
 						</div>
 
-						{#each adjustments as adjustment}
+						{#each transaction.adjustments as adjustment}
 							<div class="flex">
 								<!-- <input type="checkbox" checked={adjustment.is_adjusted} /> -->
 								<div class="mr-auto">{adjustment.description}</div>

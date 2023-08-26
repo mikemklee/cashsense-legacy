@@ -24,4 +24,5 @@ export type TransactionAdjustment = Row<'transaction_adjustments'>;
 export interface LiftedTransaction extends Transaction {
   account: Pick<Account, 'id' | 'name'>;
   category: Pick<Category, 'id' | 'name' | 'color'>;
+  adjustments: TransactionAdjustment[];
 }
