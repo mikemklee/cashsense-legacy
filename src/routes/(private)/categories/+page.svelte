@@ -8,12 +8,14 @@
 	import type { Category } from '$lib/types';
 	import EditCategoryModal from './EditCategoryModal.svelte';
 	import NewCategoryModal from './NewCategoryModal.svelte';
+	import DeleteCategoryModal from './DeleteCategoryModal.svelte';
 
 	let categories: Category[] = [];
 
 	let selectedCategory: Category | undefined = undefined;
 	let showNewCategoryModal = false;
 	let showEditCategoryModal = false;
+	let showDeleteCategoryModal = false;
 
 	const unsubscribeFromCategoryStore = categoryStore.subscribe((state) => {
 		categories = state.data;
@@ -24,6 +26,7 @@
 	async function onDelete(id?: string) {
 		if (!id) return;
 		await categoryStore.deleteCategory(id);
+		showDeleteCategoryModal = false;
 	}
 
 	async function onSaveEdit(enteredName: string, enteredColor: string) {
@@ -85,7 +88,7 @@
 				</div>
 				<div class="ml-auto flex gap-2">
 					<Button text="Edit" onClick={() => (showEditCategoryModal = true)} style="secondary" />
-					<Button text="Delete" onClick={() => onDelete(selectedCategory?.id)} style="alert" />
+					<Button text="Delete" onClick={() => (showDeleteCategoryModal = true)} style="alert" />
 				</div>
 			</div>
 			<EditCategoryModal
@@ -93,6 +96,12 @@
 				showModal={showEditCategoryModal}
 				onSubmit={onSaveEdit}
 				on:close={() => (showEditCategoryModal = false)}
+			/>
+			<DeleteCategoryModal
+				category={selectedCategory}
+				showModal={showDeleteCategoryModal}
+				onSubmit={onDelete}
+				on:close={() => (showDeleteCategoryModal = false)}
 			/>
 		{/if}
 	</section>

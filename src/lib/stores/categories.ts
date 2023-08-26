@@ -90,16 +90,20 @@ const createStore = <T>() => {
     update((state) => ({ ...state, loading: true, error: null }));
 
     try {
-      await fetch(`/api/categories?id=${id}`, {
+      const response = await fetch(`/api/categories?id=${id}`, {
         method: 'DELETE',
       });
 
-      update((state) => {
-        const updatedData = state.data.filter((category) => category.id !== id);
-        return { ...state, data: updatedData, loading: false }
-      });
+      if (response.ok) {
+        update((state) => {
+          const updatedData = state.data.filter((category) => category.id !== id);
+          return { ...state, data: updatedData, loading: false }
+        });
 
-      toast.success(`Category deleted`);
+        toast.success(`Category deleted`);
+      } else {
+        throw response
+      }
     } catch (error) {
       console.error(error)
       update((state) => ({ ...state, loading: false, error: error as Error }));
