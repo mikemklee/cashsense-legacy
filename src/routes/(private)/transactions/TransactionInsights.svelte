@@ -5,7 +5,7 @@
 	import type { LiftedTransaction } from '$lib/types';
 
 	export let transactions: LiftedTransaction[] = [];
-	$: expenses = transactions.filter((transaction) => transaction.amount < 0);
+	$: expenses = transactions.filter((transaction) => transaction.adjustedAmount < 0);
 
 	let expensesByCategory: ExpensesByCategoryMap;
 	let totalExpenses: number;
@@ -14,7 +14,7 @@
 		expensesByCategory = expenses.reduce((result, expense) => {
 			const categoryName = expense.category.name;
 			const categoryColor = expense.category.color;
-			const amount = expense.amount;
+			const amount = expense.adjustedAmount;
 
 			// If the category exists in the result object, add the amount to the existing value
 			if (result[categoryName]) {
@@ -31,7 +31,7 @@
 			return result;
 		}, {} as ExpensesByCategoryMap);
 
-		totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
+		totalExpenses = expenses.reduce((acc, curr) => acc + curr.adjustedAmount, 0);
 
 		topThreeExpenseCategories = Object.entries(expensesByCategory)
 			.map(([key, obj]) => ({

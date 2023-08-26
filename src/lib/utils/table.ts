@@ -24,7 +24,7 @@ export const TRANSACTION_TABLE_COLUMNS = [
   },
   {
     header: 'Amount',
-    accessorKey: 'amount',
+    accessorKey: 'adjustedAmount',
     cell: () => AmountCell
   }
 ];
