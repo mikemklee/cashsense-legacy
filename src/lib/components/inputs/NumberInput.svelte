@@ -15,7 +15,7 @@
 		step=".01"
 		bind:value
 		required={isRequired}
-		class="px-2 py-1 border border-gray-400 bg-transparent rounded"
+		class="px-2 py-1 border border-gray-400 bg-transparent rounded min-w-0 w-full"
 		on:focus={onFocus}
 	/>
 </div>

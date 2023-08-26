@@ -60,16 +60,13 @@ const createStore = <T>() => {
     }
   }
 
-  const updateTransactionAdjustments = async (transactionId: string, updateData: any) => {
+  const upsertTransactionAdjustments = async (updateData: any) => {
     update((state) => ({ ...state, loading: true, error: null }));
     try {
       const response = await fetch('/api/transaction_adjustments', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          transactionId: transactionId,
-          adjustments: updateData
-        })
+        body: JSON.stringify(updateData)
       });
       const [updatedRecord] = await response.json();
 
@@ -86,12 +83,10 @@ const createStore = <T>() => {
     }
   }
 
-
-
   return {
     fetchTransactions,
     updateTransaction,
-    updateTransactionAdjustments,
+    upsertTransactionAdjustments,
     subscribe,
     set,
     update,

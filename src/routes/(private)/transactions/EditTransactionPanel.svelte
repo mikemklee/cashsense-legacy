@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { format } from 'date-fns';
 	import { onDestroy, onMount } from 'svelte';
+	import { v4 as uuid } from 'uuid';
 
 	import Button from '$lib/components/Button.svelte';
 	import DateInput from '$lib/components/inputs/DateInput.svelte';
@@ -30,14 +31,16 @@
 	let accountOptions: Option[] = [];
 
 	type Adjustment = {
-		id?: string;
+		id: string;
 		is_adjusted: boolean;
 		description: string;
 		amount: number;
 		direction: string;
+		transaction_id: string;
 	};
 
 	let adjustmentsData: Adjustment[] = [];
+	let adjustmentsToDelete: string[] = [];
 
 	const unsubscribeFromCategoryStore = categoryStore.subscribe((state) => {
 		categoryOptions = state.data.map((category: Category) => ({
@@ -68,9 +71,7 @@
 		selectedAccount = transaction.account_id;
 
 		adjustmentsData = transaction.adjustments.map((adjustment) => ({
-			id: adjustment.id,
-			is_adjusted: adjustment.is_adjusted,
-			description: adjustment.description,
+			...adjustment,
 			amount: Math.abs(adjustment.amount) / 100,
 			direction: adjustment.amount < 0 ? '-1' : '1'
 		}));
@@ -105,15 +106,21 @@
 	}
 
 	async function handleSubmit() {
-		const formattedAdjustments = adjustmentsData.map((adjustment) => ({
-			id: adjustment.id,
-			description: adjustment.description,
-			is_adjusted: adjustment.is_adjusted,
-			amount: formatAmountForSave(adjustment.amount, adjustment.direction),
-			transaction_id: transaction.id
-		}));
+		console.log('TODO: we need to delete these', adjustmentsToDelete);
 
-		await transactionStore.updateTransactionAdjustments(transaction.id, formattedAdjustments);
+		const formattedAdjustments = adjustmentsData
+			.filter((item) => {
+				return adjustmentsToDelete.includes(item.id) === false;
+			})
+			.map((adjustment) => ({
+				id: adjustment.id,
+				description: adjustment.description,
+				is_adjusted: adjustment.is_adjusted,
+				amount: formatAmountForSave(adjustment.amount, adjustment.direction),
+				transaction_id: transaction.id
+			}));
+
+		await transactionStore.upsertTransactionAdjustments(formattedAdjustments);
 
 		await transactionStore.updateTransaction({
 			id: transaction.id,
@@ -128,9 +135,28 @@
 		resetFields();
 	}
 
-	const onRemoveAdjustment = (id?: string) => {
-		if (!id) return;
-		adjustmentsData = adjustmentsData.filter((adjustment) => adjustment.id !== id);
+	const onAddAdjustment = () => {
+		adjustmentsData = [
+			...adjustmentsData,
+			{
+				id: uuid(),
+				is_adjusted: false,
+				description: 'Enter a description',
+				amount: 0,
+				direction: '1',
+				transaction_id: transaction.id
+			}
+		];
+	};
+
+	const onRemoveAdjustment = async (adjustmentId?: string) => {
+		if (!adjustmentId) return;
+		const existingAdjustmentIds = transaction.adjustments.map((adjustment) => adjustment.id);
+		if (existingAdjustmentIds.includes(adjustmentId)) {
+			adjustmentsToDelete = [...adjustmentsToDelete, adjustmentId];
+		} else {
+			adjustmentsData = adjustmentsData.filter((adjustment) => adjustment.id !== adjustmentId);
+		}
 	};
 </script>
 
@@ -176,10 +202,31 @@
 		<div class="flex flex-col gap-y-2 my-4">
 			<div class="flex items-center justify-between">
 				<Heading isSnug size="md">Edit adjustments</Heading>
-				<button>Add</button>
+				<button on:click={onAddAdjustment} class="rounded border border-gray-600 px-4 py-[1px]">
+					Add
+				</button>
 			</div>
 			{#each adjustmentsData as adjustment}
 				<div class="flex items-center">
+					<div class="flex flex-col mr-4">
+						<span class="text-sm">Direction</span>
+						<div class="flex justify-evenly h-[34px]">
+							<button
+								class="border border-gray-400 w-full rounded rounded-r-none transition-all px-4 text-xl
+								{adjustment.direction === '-1' ? 'bg-red-400 border-red-400 text-white' : 'opacity-40'}"
+								on:click={() => (adjustment.direction = '-1')}
+							>
+								-
+							</button>
+							<button
+								class="border border-gray-400 w-full rounded rounded-l-none transition-all px-4 text-xl
+									{adjustment.direction === '1' ? 'bg-green-400 border-green-400 text-white' : 'opacity-40'}"
+								on:click={() => (adjustment.direction = '1')}
+							>
+								+
+							</button>
+						</div>
+					</div>
 					<div class="grow mr-4">
 						<TextInput label="Description" bind:value={adjustment.description} isRequired />
 					</div>
@@ -192,6 +239,12 @@
 				</div>
 			{/each}
 		</div>
+
+		{#if adjustmentsToDelete.length > 0}
+			<span class="text-right text-sm text-red-400">
+				{adjustmentsToDelete.length} adjustments will be deleted
+			</span>
+		{/if}
 	{/if}
 
 	<div class="flex justify-end gap-4 mt-4">

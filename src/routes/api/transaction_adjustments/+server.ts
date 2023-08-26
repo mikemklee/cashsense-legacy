@@ -36,23 +36,8 @@ export async function PUT({ request, locals: { supabase, getSession } }) {
     throw error(401, 'Unauthorized');
   }
 
-  const { transactionId, adjustments } = await request.json();
-
-  const upsertDocuments: any = []
-
-  adjustments.forEach((adjustment: any) => {
-    if (adjustment.id) {
-      upsertDocuments.push(adjustment)
-    } else {
-      upsertDocuments.push({
-        ...adjustment,
-        id: uuid(),
-        transaction_id: transactionId,
-      })
-    }
-  })
-
-  console.log(upsertDocuments)
+  const adjustments = await request.json();
+  console.log(adjustments)
 
   // bulk upsert
   const {
@@ -61,7 +46,7 @@ export async function PUT({ request, locals: { supabase, getSession } }) {
     status: statusCode,
   } = await supabase
     .from('transaction_adjustments')
-    .upsert(upsertDocuments)
+    .upsert(adjustments)
 
   if (upsertError) {
     console.error(upsertError)
