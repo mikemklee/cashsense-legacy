@@ -179,7 +179,9 @@
 
 	<!-- Main -->
 	<div class="relative flex-grow">
-		<TransactionDetails transaction={selectedTransaction} onDeselect={onDeselectTransaction} />
+		{#if selectedTransaction}
+			<TransactionDetails transaction={selectedTransaction} onDeselect={onDeselectTransaction} />
+		{/if}
 		<section class="p-6 pr-12">
 			{#if displayedTransactions.length > 0}
 				<TransactionInsights transactions={displayedTransactions} />
