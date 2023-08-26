@@ -7,7 +7,7 @@
 	import DateInput from '$lib/components/inputs/DateInput.svelte';
 	import SearchInput from '$lib/components/inputs/SearchInput.svelte';
 	import DataTable from '$lib/components/table/DataTable.svelte';
-	import accountStore from '$lib/stores/accountStore';
+	import accountStore from '$lib/stores/accounts';
 	import categoryStore from '$lib/stores/categories';
 	import transactionStore from '$lib/stores/transactions';
 	import type { Account, Category, LiftedTransaction } from '$lib/types';

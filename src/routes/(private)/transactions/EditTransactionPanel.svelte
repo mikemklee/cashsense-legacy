@@ -8,7 +8,7 @@
 	import NumberInput from '$lib/components/inputs/NumberInput.svelte';
 	import SelectInput, { type Option } from '$lib/components/inputs/SelectInput.svelte';
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
-	import accountStore from '$lib/stores/accountStore';
+	import accountStore from '$lib/stores/accounts';
 	import categoryStore from '$lib/stores/categories';
 	import type { Account, Category, LiftedTransaction, TransactionAdjustment } from '$lib/types';
 	import Heading from '$lib/components/Heading.svelte';

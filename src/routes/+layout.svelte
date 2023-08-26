@@ -7,7 +7,7 @@
 	import { invalidate } from '$app/navigation';
 	import '../app.css';
 	import ScrollToTop from '$lib/components/ScrollToTop.svelte';
-	import accountStore from '$lib/stores/accountStore';
+	import accountStore from '$lib/stores/accounts';
 	import categoryStore from '$lib/stores/categories';
 	import { Toaster } from 'svelte-french-toast';
 	import { getSiteName } from '$lib/utils/env';

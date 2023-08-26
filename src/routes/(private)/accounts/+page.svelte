@@ -4,7 +4,7 @@
 
 	import Button from '$lib/components/Button.svelte';
 	import Heading from '$lib/components/Heading.svelte';
-	import accountStore from '$lib/stores/accountStore';
+	import accountStore from '$lib/stores/accounts';
 	import type { Account } from '$lib/types';
 	import { humanizeAccountType } from '$lib/utils/format';
 	import NewAccountModal from './NewAccountModal.svelte';
