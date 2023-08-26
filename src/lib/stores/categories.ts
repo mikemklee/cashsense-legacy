@@ -86,10 +86,32 @@ const createStore = <T>() => {
     }
   }
 
+  const deleteCategory = async (id: string) => {
+    update((state) => ({ ...state, loading: true, error: null }));
+
+    try {
+      await fetch(`/api/categories?id=${id}`, {
+        method: 'DELETE',
+      });
+
+      update((state) => {
+        const updatedData = state.data.filter((category) => category.id !== id);
+        return { ...state, data: updatedData, loading: false }
+      });
+
+      toast.success(`Category deleted`);
+    } catch (error) {
+      console.error(error)
+      update((state) => ({ ...state, loading: false, error: error as Error }));
+      toast.error(`Something went wrong while deleting category`);
+    }
+  }
+
   return {
     createCategory,
     fetchCategories,
     updateCategory,
+    deleteCategory,
     subscribe,
     set,
     update,
