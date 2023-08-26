@@ -9,15 +9,13 @@
 	import Selectable from '$lib/components/Selectable.svelte';
 	import DateInput from '$lib/components/inputs/DateInput.svelte';
 	import SearchInput from '$lib/components/inputs/SearchInput.svelte';
-	import AmountCell from '$lib/components/table/AmountCell.svelte';
-	import CategoryCell from '$lib/components/table/CategoryCell.svelte';
 	import DataTable from '$lib/components/table/DataTable.svelte';
-	import DateCell from '$lib/components/table/DateCell.svelte';
 	import accountStore from '$lib/stores/accountStore';
 	import categoryStore from '$lib/stores/categories';
 	import transactionStore from '$lib/stores/transactions';
 	import type { Account, Category, LiftedTransaction } from '$lib/types';
 	import { humanizeAccountType } from '$lib/utils/format';
+	import { TRANSACTION_TABLE_COLUMNS } from '$lib/utils/table';
 	import NewTransactionPanel from './NewTransactionPanel.svelte';
 	import TransactionDetails from './TransactionDetails.svelte';
 	import TransactionInsights from './TransactionInsights.svelte';
@@ -138,32 +136,6 @@
 		unsubscribeFromCategoryStore();
 		unsubscribeFromTransactionStore();
 	});
-
-	const columns = [
-		{
-			header: 'Date',
-			accessorKey: 'posted_at',
-			cell: () => DateCell
-		},
-		{
-			header: 'Description',
-			accessorKey: 'description'
-		},
-		{
-			header: 'Category',
-			accessorFn: (transaction: LiftedTransaction) => transaction.category,
-			cell: () => CategoryCell
-		},
-		{
-			header: 'Account',
-			accessorFn: (transaction: LiftedTransaction) => transaction.account.name
-		},
-		{
-			header: 'Amount',
-			accessorKey: 'amount',
-			cell: () => AmountCell
-		}
-	];
 </script>
 
 <div class="flex h-full">
@@ -350,7 +322,7 @@
 				</div>
 				{#if transactions.length > 0}
 					<DataTable
-						defaultColumns={columns}
+						defaultColumns={TRANSACTION_TABLE_COLUMNS}
 						defaultData={transactions}
 						selectedItem={selectedTransaction}
 						handleRowSelect={onSelectTransaction}
