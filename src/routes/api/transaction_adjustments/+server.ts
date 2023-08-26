@@ -37,7 +37,6 @@ export async function PUT({ request, locals: { supabase, getSession } }) {
   }
 
   const adjustments = await request.json();
-  console.log(adjustments)
 
   // bulk upsert
   const {
@@ -54,5 +53,27 @@ export async function PUT({ request, locals: { supabase, getSession } }) {
   } else {
     return json(data)
   }
+}
 
+export async function DELETE({ request, locals: { supabase, getSession } }) {
+  const session = await getSession()
+  if (!session) {
+    throw error(401, 'Unauthorized');
+  }
+
+  const idsToDelete = await request.json();
+
+  const {
+    error: deleteError,
+    status: statusCode,
+  } = await supabase.from('transaction_adjustments')
+    .delete()
+    .in('id', idsToDelete)
+
+  if (deleteError) {
+    console.error(deleteError)
+    throw error(statusCode, 'Unexpected error while deleting transaction adjustments')
+  } else {
+    return json('Transaction deleted')
+  }
 }

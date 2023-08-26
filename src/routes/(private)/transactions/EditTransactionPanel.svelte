@@ -106,8 +106,6 @@
 	}
 
 	async function handleSubmit() {
-		console.log('TODO: we need to delete these', adjustmentsToDelete);
-
 		const formattedAdjustments = adjustmentsData
 			.filter((item) => {
 				return adjustmentsToDelete.includes(item.id) === false;
@@ -121,7 +119,7 @@
 			}));
 
 		await transactionStore.upsertTransactionAdjustments(formattedAdjustments);
-
+		await transactionStore.deleteTransactionAdjustments(adjustmentsToDelete);
 		await transactionStore.updateTransaction({
 			id: transaction.id,
 			posted_at: new Date(selectedDate),
@@ -153,7 +151,11 @@
 		if (!adjustmentId) return;
 		const existingAdjustmentIds = transaction.adjustments.map((adjustment) => adjustment.id);
 		if (existingAdjustmentIds.includes(adjustmentId)) {
-			adjustmentsToDelete = [...adjustmentsToDelete, adjustmentId];
+			if (adjustmentsToDelete.includes(adjustmentId)) {
+				adjustmentsToDelete = adjustmentsToDelete.filter((id) => id !== adjustmentId);
+			} else {
+				adjustmentsToDelete = [...adjustmentsToDelete, adjustmentId];
+			}
 		} else {
 			adjustmentsData = adjustmentsData.filter((adjustment) => adjustment.id !== adjustmentId);
 		}
@@ -161,7 +163,15 @@
 </script>
 
 <div class="flex flex-col gap-y-4 px-6">
-	<SelectInput label="Account" isRequired options={accountOptions} bind:value={selectedAccount} />
+	<div class="grid grid-cols-2 gap-x-4">
+		<SelectInput
+			label="Category"
+			isRequired
+			options={categoryOptions}
+			bind:value={selectedCategory}
+		/>
+		<SelectInput label="Account" isRequired options={accountOptions} bind:value={selectedAccount} />
+	</div>
 
 	<DateInput label="Date" bind:value={selectedDate} />
 	<TextInput label="Description" bind:value={enteredDescription} isRequired />
@@ -191,60 +201,53 @@
 		</div>
 	</div>
 
-	<SelectInput
-		label="Category"
-		isRequired
-		options={categoryOptions}
-		bind:value={selectedCategory}
-	/>
-
-	{#if adjustmentsData}
-		<div class="flex flex-col gap-y-2 my-4">
-			<div class="flex items-center justify-between">
-				<Heading isSnug size="md">Edit adjustments</Heading>
-				<button on:click={onAddAdjustment} class="rounded border border-gray-600 px-4 py-[1px]">
-					Add
-				</button>
-			</div>
+	<div class="flex flex-col gap-y-2 my-4">
+		<div class="flex items-center justify-between">
+			<Heading isSnug size="lg">Adjustments</Heading>
+			<button on:click={onAddAdjustment} class="rounded border border-gray-600 px-4 py-[1px]">
+				Add
+			</button>
+		</div>
+		{#if adjustmentsData.length > 0}
 			{#each adjustmentsData as adjustment}
-				<div class="flex items-center">
-					<div class="flex flex-col mr-4">
-						<span class="text-sm">Direction</span>
-						<div class="flex justify-evenly h-[34px]">
-							<button
-								class="border border-gray-400 w-full rounded rounded-r-none transition-all px-4 text-xl
-								{adjustment.direction === '-1' ? 'bg-red-400 border-red-400 text-white' : 'opacity-40'}"
-								on:click={() => (adjustment.direction = '-1')}
-							>
-								-
-							</button>
-							<button
-								class="border border-gray-400 w-full rounded rounded-l-none transition-all px-4 text-xl
-									{adjustment.direction === '1' ? 'bg-green-400 border-green-400 text-white' : 'opacity-40'}"
-								on:click={() => (adjustment.direction = '1')}
-							>
-								+
-							</button>
-						</div>
-					</div>
+				<div class="flex items-end">
 					<div class="grow mr-4">
 						<TextInput label="Description" bind:value={adjustment.description} isRequired />
 					</div>
+					<div class="flex mr-4 justify-evenly h-[34px]">
+						<button
+							class="border border-gray-400 w-full rounded rounded-r-none transition-all px-3 text-xl
+								{adjustment.direction === '-1' ? 'bg-red-400 border-red-400 text-white' : 'opacity-40'}"
+							on:click={() => (adjustment.direction = '-1')}
+						>
+							-
+						</button>
+						<button
+							class="border border-gray-400 w-full rounded rounded-l-none transition-all px-3 text-xl
+									{adjustment.direction === '1' ? 'bg-green-400 border-green-400 text-white' : 'opacity-40'}"
+							on:click={() => (adjustment.direction = '1')}
+						>
+							+
+						</button>
+					</div>
+
 					<div class="grow mr-4">
 						<NumberInput label="Amount" bind:value={adjustment.amount} isRequired />
 					</div>
 					<button on:click={() => onRemoveAdjustment(adjustment?.id)}>
-						<Icon icon="tabler:x" class="w-6 h-6 mt-4 shrink" />
+						<Icon icon="tabler:x" class="w-6 h-6 mb-1 shrink" />
 					</button>
 				</div>
 			{/each}
-		</div>
-
-		{#if adjustmentsToDelete.length > 0}
-			<span class="text-right text-sm text-red-400">
-				{adjustmentsToDelete.length} adjustments will be deleted
-			</span>
+		{:else}
+			<span class="text-sm text-gray-400">This transaction was not adjusted</span>
 		{/if}
+	</div>
+
+	{#if adjustmentsToDelete.length > 0}
+		<span class="text-right text-sm text-red-400">
+			{adjustmentsToDelete.length} adjustments will be deleted
+		</span>
 	{/if}
 
 	<div class="flex justify-end gap-4 mt-4">

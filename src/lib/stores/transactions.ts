@@ -63,20 +63,23 @@ const createStore = <T>() => {
   const upsertTransactionAdjustments = async (updateData: any) => {
     update((state) => ({ ...state, loading: true, error: null }));
     try {
-      const response = await fetch('/api/transaction_adjustments', {
+      await fetch('/api/transaction_adjustments', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updateData)
       });
-      const [updatedRecord] = await response.json();
+    } catch (error) {
+      update((state) => ({ ...state, loading: false, error: error as Error }));
+    }
+  }
 
-      update((state) => {
-        const updatedData = state.data
-          .map((transaction) => transaction.id === updatedRecord.id
-            ? updatedRecord
-            : transaction
-          );
-        return { ...state, data: updatedData, loading: false }
+  const deleteTransactionAdjustments = async (idsToDelete: any) => {
+    update((state) => ({ ...state, loading: true, error: null }));
+    try {
+      await fetch('/api/transaction_adjustments', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(idsToDelete)
       });
     } catch (error) {
       update((state) => ({ ...state, loading: false, error: error as Error }));
@@ -87,6 +90,7 @@ const createStore = <T>() => {
     fetchTransactions,
     updateTransaction,
     upsertTransactionAdjustments,
+    deleteTransactionAdjustments,
     subscribe,
     set,
     update,
