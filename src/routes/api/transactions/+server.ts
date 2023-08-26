@@ -23,6 +23,12 @@ export async function POST({ request, locals: { supabase, getSession } }) {
       id: uuid(),
       profile_id: session.user.id,
     })
+    .select(`
+      *,
+      account:accounts (id, name),
+      category:categories (id, name, color),
+      adjustments:transaction_adjustments (*)
+    `)
 
   if (insertError) {
     console.error(insertError)

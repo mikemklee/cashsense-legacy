@@ -15,6 +15,33 @@ const createStore = <T>() => {
     error: null
   });
 
+  const createTransaction = async (createData: any) => {
+    update((state) => ({ ...state, loading: true, error: null }));
+
+    try {
+      const response = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(createData)
+      });
+
+      const [createdTransaction] = await response.json();
+
+      update((state) => ({
+        ...state, data: [
+          ...state.data,
+          createdTransaction
+        ], loading: false,
+      }));
+
+      toast.success(`Transaction record created`);
+    } catch (error) {
+      console.error(error)
+      update((state) => ({ ...state, loading: false, error: error as Error }));
+      toast.error(`Something went wrong while creating transaction record`);
+    }
+  }
+
   const fetchTransactions = async (startDate: string = '', endDate: string = '', searchTerm = '') => {
     update((state) => ({ ...state, loading: true, error: null }));
     try {
@@ -99,6 +126,7 @@ const createStore = <T>() => {
   }
 
   return {
+    createTransaction,
     fetchTransactions,
     updateTransaction,
     upsertTransactionAdjustments,

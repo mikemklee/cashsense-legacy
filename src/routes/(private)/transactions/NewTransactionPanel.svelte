@@ -2,7 +2,6 @@
 	import Icon from '@iconify/svelte';
 	import { format } from 'date-fns';
 	import { onDestroy } from 'svelte';
-	import toast from 'svelte-french-toast';
 
 	import Button from '$lib/components/Button.svelte';
 	import Collapsible from '$lib/components/Collapsible.svelte';
@@ -14,6 +13,7 @@
 	import type { Account, Category } from '$lib/types';
 	import accountStore from '$lib/stores/accountStore';
 	import categoryStore from '$lib/stores/categories';
+	import transactionStore from '$lib/stores/transactions';
 
 	export let showPanel: boolean;
 	export let onClose = () => {};
@@ -64,19 +64,13 @@
 		const amountInCents = Math.round(rawDollarAmount * 100);
 		const centsWithDirection = selectedDirection === '-1' ? -amountInCents : amountInCents;
 
-		await fetch('/api/transactions', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				posted_at: new Date(selectedDate),
-				description: enteredDescription,
-				amount: centsWithDirection,
-				category_id: selectedCategory,
-				account_id: selectedAccount
-			})
+		await transactionStore.createTransaction({
+			posted_at: new Date(selectedDate),
+			description: enteredDescription,
+			amount: centsWithDirection,
+			category_id: selectedCategory,
+			account_id: selectedAccount
 		});
-
-		toast.success(`Transaction record created`);
 
 		onSubmit();
 		resetFields();
