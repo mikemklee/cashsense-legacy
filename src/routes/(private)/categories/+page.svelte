@@ -6,8 +6,8 @@
 	import Heading from '$lib/components/Heading.svelte';
 	import categoryStore from '$lib/stores/categories';
 	import type { Category } from '$lib/types';
-	import EditRecordModal from './EditCategoryModal.svelte';
-	import NewRecordModal from './NewCategoryModal.svelte';
+	import EditCategoryModal from './EditCategoryModal.svelte';
+	import NewCategoryModal from './NewCategoryModal.svelte';
 
 	let categories: Category[] = [];
 
@@ -88,8 +88,8 @@
 					<Button text="Delete" onClick={() => onDelete(selectedCategory?.id)} style="alert" />
 				</div>
 			</div>
-			<EditRecordModal
-				record={selectedCategory}
+			<EditCategoryModal
+				category={selectedCategory}
 				showModal={showEditCategoryModal}
 				onSubmit={onSaveEdit}
 				on:close={() => (showEditCategoryModal = false)}
@@ -98,7 +98,7 @@
 	</section>
 </div>
 
-<NewRecordModal
+<NewCategoryModal
 	showModal={showNewCategoryModal}
 	on:close={() => (showNewCategoryModal = false)}
 	onSubmit={() => (showNewCategoryModal = false)}

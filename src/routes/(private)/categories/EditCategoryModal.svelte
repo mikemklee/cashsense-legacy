@@ -5,12 +5,12 @@
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
 	import type { Category } from '$lib/types';
 
-	export let record: Category;
+	export let category: Category;
 	export let showModal: boolean;
 	export let onSubmit = (name: string, color: string) => {};
 
-	$: enteredName = record.name;
-	$: enteredColor = record.color;
+	$: enteredName = category.name;
+	$: enteredColor = category.color;
 
 	async function onNameChange(event: Event) {
 		const name = (event.target as HTMLInputElement).value;
