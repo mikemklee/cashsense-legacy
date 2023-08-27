@@ -19,7 +19,7 @@
 	import TransactionInsights from './TransactionInsights.svelte';
 
 	let transactions: LiftedTransaction[] = [];
-	let selectedStartDate: Date | null = startOfMonth(new Date('2023-01-02'));
+	let selectedStartDate: Date | null = startOfMonth(new Date());
 	let selectedEndDate: Date | null = new Date();
 	let searchValue = '';
 	let timer: NodeJS.Timeout;

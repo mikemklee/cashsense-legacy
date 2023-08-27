@@ -1,4 +1,5 @@
 import type { LiftedTransaction, TransactionAdjustment } from '$lib/types';
+import { formatAdjustedAmount } from '$lib/utils/format';
 import toast from 'svelte-french-toast';
 import { writable } from 'svelte/store';
 
@@ -30,7 +31,7 @@ const createStore = <T>() => {
       update((state) => ({
         ...state, data: [
           ...state.data,
-          createdTransaction
+          formatAdjustedAmount(createdTransaction)
         ], loading: false,
       }));
 
@@ -53,17 +54,7 @@ const createStore = <T>() => {
       const response = await fetch(queryPath);
       const data = await response.json();
 
-      const formattedData = data.map((transaction: any) => {
-        let amountAfterAdjustments =
-          transaction.amount +
-          transaction.adjustments.reduce(
-            (acc: number, adjustment: TransactionAdjustment) => acc + adjustment.amount,
-            0);
-        return {
-          ...transaction,
-          adjustedAmount: amountAfterAdjustments
-        }
-      });
+      const formattedData = data.map(formatAdjustedAmount);
 
       update((state) => ({ ...state, data: formattedData, loading: false }));
       return data;
@@ -85,10 +76,12 @@ const createStore = <T>() => {
 
       update((state) => {
         const updatedData = state.data
-          .map((transaction) => transaction.id === updatedRecord.id
-            ? updatedRecord
-            : transaction
-          );
+          .map((transaction) => {
+            const item = transaction.id === updatedRecord.id
+              ? updatedRecord
+              : transaction
+            return formatAdjustedAmount(item)
+          });
         return { ...state, data: updatedData, loading: false }
       });
 
