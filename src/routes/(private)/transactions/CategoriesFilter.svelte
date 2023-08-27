@@ -13,7 +13,19 @@
 	export let onSelectAllCategories: () => void;
 </script>
 
-<Heading size="md">Categories</Heading>
+<Heading size="md">
+	<div class="flex">
+		Categories
+		{#if categories.length === 0}
+			<span class="relative flex h-2.5 w-2.5 ml-1">
+				<span
+					class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
+				/>
+				<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-sky-500" />
+			</span>
+		{/if}
+	</div>
+</Heading>
 
 {#if categories.length > 0}
 	<div class="my-2 flex flex-col gap-2">

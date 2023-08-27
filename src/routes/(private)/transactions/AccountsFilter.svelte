@@ -5,6 +5,7 @@
 	import Selectable from '$lib/components/Selectable.svelte';
 	import type { Account } from '$lib/types';
 	import { humanizeAccountType } from '$lib/utils/format';
+	import { flip } from 'svelte/animate';
 
 	export let selectedAccounts: string[] = [];
 	export let accounts: Account[] = [];
@@ -13,7 +14,19 @@
 	export let onSelectAllAccounts: () => void;
 </script>
 
-<Heading size="md">Accounts</Heading>
+<Heading size="md">
+	<div class="flex">
+		Accounts
+		{#if accounts.length === 0}
+			<span class="relative flex h-2.5 w-2.5 ml-1">
+				<span
+					class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
+				/>
+				<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-sky-500" />
+			</span>
+		{/if}
+	</div>
+</Heading>
 
 {#if accounts.length > 0}
 	<div class="my-2 flex flex-col gap-2">
