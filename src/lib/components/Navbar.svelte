@@ -64,6 +64,12 @@
 		>
 			Accounts
 		</a>
+		<a
+			href="/support"
+			class="transition-opacity {pathname === '/support' ? 'opacity-100' : 'opacity-50'}"
+		>
+			Support
+		</a>
 	</div>
 
 	<div class="ml-auto pr-2 flex items-center">
