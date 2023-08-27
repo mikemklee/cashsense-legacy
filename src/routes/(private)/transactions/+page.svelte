@@ -213,8 +213,18 @@
 						handleRowSelect={onSelectTransaction}
 					/>
 				{:else}
-					<div class="text-gray-400 text-left mt-2">
-						<span>You don't have any transactions recorded yet.</span>
+					<div class="text-left mt-2">
+						<p class="text-gray-400">You don't have any transactions recorded yet.</p>
+
+						{#if isNewRecordDisabled}
+							<div class="rounded border border-indigo-400 max-w-md p-2 text-sm mt-4">
+								<span class="text-indigo-400">Tip</span>
+								<div class="flex flex-col gap-y-2">
+									<p>To record a transaction, add some categories and accounts first.</p>
+									<p>Then, click on the "New record" button on the top left corner.</p>
+								</div>
+							</div>
+						{/if}
 					</div>
 				{/if}
 			</div>

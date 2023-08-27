@@ -94,6 +94,19 @@
 				on:close={() => (showDeleteAccountModal = false)}
 			/>
 		{/if}
+
+		{#if accounts.length === 0}
+			<div class="rounded border border-indigo-400 max-w-md p-2 text-sm">
+				<span class="text-indigo-400">Tip</span>
+				<div class="flex flex-col gap-y-2">
+					<p>
+						An account represents your real-life financial account, such as your bank account or
+						your credit card.
+					</p>
+					<p>Click on the "New acocunt" button on the top left corner to add your first account!</p>
+				</div>
+			</div>
+		{/if}
 	</section>
 </div>
 

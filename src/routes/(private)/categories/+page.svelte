@@ -104,6 +104,19 @@
 				on:close={() => (showDeleteCategoryModal = false)}
 			/>
 		{/if}
+
+		{#if categories.length === 0}
+			<div class="rounded border border-indigo-400 max-w-md p-2 text-sm">
+				<span class="text-indigo-400">Tip</span>
+				<div class="flex flex-col gap-y-2">
+					<p>A category is how you can group your expenses or incomes.</p>
+					<p>e.g., "Grocery", "Paycheck", "Subscriptions", etc.</p>
+					<p>
+						Click on the "New category" button on the top left corner to create your first category!
+					</p>
+				</div>
+			</div>
+		{/if}
 	</section>
 </div>
 
