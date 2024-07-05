@@ -1,0 +1,21 @@
+name: Keep Server Alive
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # This cron expression means "At 00:00 on Sunday"
+
+jobs:
+  keep_alive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14' # Adjust to your required Node.js version
+
+      - name: Run keep_alive script
+        run: node keep_alive.js
