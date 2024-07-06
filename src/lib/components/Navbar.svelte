@@ -53,6 +53,12 @@
 			Transactions
 		</a>
 		<a
+			href="/vendors"
+			class="transition-opacity {pathname === '/vendors' ? 'opacity-100' : 'opacity-50'}"
+		>
+			Vendors
+		</a>
+		<a
 			href="/categories"
 			class="transition-opacity {pathname === '/categories' ? 'opacity-100' : 'opacity-50'}"
 		>

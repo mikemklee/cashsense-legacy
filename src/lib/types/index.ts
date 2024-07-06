@@ -17,6 +17,10 @@ export type Category = Row<'categories'>;
 export type CategoryInsertDto = InsertDto<'categories'>;
 export type CategoryUpdateDto = UpdateDto<'categories'>;
 
+export type Vendor = Row<'vendors'>;
+export type VendorInsertDto = InsertDto<'vendors'>;
+export type VendorUpdateDto = UpdateDto<'vendors'>;
+
 export type Profile = Row<'profiles'>;
 
 export type TransactionAdjustment = Row<'transaction_adjustments'>;

@@ -103,7 +103,7 @@
 						An account represents your real-life financial account, such as your bank account or
 						your credit card.
 					</p>
-					<p>Click on the "New acocunt" button on the top left corner to add your first account!</p>
+					<p>Click on the "New account" button on the top left corner to add your first account!</p>
 				</div>
 			</div>
 		{/if}
