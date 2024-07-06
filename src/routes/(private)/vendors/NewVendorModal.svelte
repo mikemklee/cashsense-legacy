@@ -2,6 +2,7 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
+	import vendorStore from '$lib/stores/vendors';
 
 	let name = '';
 
@@ -13,13 +14,9 @@
 	}
 
 	async function handleSubmit() {
-		await fetch('/api/vendors', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ name })
+		await vendorStore.createVendor({
+			name
 		});
-
-		name = '';
 
 		onSubmit();
 		resetFields();

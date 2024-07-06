@@ -11,6 +11,7 @@
 	import categoryStore from '$lib/stores/categories';
 	import { Toaster } from 'svelte-french-toast';
 	import { getSiteName } from '$lib/utils/env';
+	import vendorStore from '$lib/stores/vendors';
 
 	export let data;
 
@@ -26,6 +27,7 @@
 		const fetchData = async () => {
 			await accountStore.fetchAccounts();
 			await categoryStore.fetchCategories();
+			await vendorStore.fetchVendors();
 		};
 
 		fetchData();
