@@ -27,6 +27,7 @@ export async function POST({ request, locals: { supabase, getSession } }) {
       *,
       account:accounts (id, name),
       category:categories (id, name, color),
+      vendor:vendors (id, name),
       adjustments:transaction_adjustments (*)
     `)
 
@@ -66,6 +67,7 @@ export async function PATCH({ request, locals: { supabase, getSession } }) {
       *,
       account:accounts (id, name),
       category:categories (id, name, color),
+      vendor:vendors (id, name),
       adjustments:transaction_adjustments (*)
     `)
 
@@ -105,6 +107,7 @@ export async function GET({ url, locals: { supabase } }) {
       *,
       account:accounts (id, name),
       category:categories (id, name, color),
+      vendor:vendors (id, name),
       adjustments:transaction_adjustments (*)
     `)
 
