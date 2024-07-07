@@ -15,6 +15,8 @@
 	export let defaultValue = '';
 
 	onMount(() => {
+		if (!isRequired) return;
+
 		if (defaultValue) {
 			value = defaultValue;
 		} else {

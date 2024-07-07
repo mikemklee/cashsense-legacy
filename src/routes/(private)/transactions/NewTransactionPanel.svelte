@@ -10,9 +10,10 @@
 	import NumberInput from '$lib/components/inputs/NumberInput.svelte';
 	import SelectInput, { type Option } from '$lib/components/inputs/SelectInput.svelte';
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
-	import type { Account, Category } from '$lib/types';
+	import type { Account, Category, Vendor } from '$lib/types';
 	import accountStore from '$lib/stores/accounts';
 	import categoryStore from '$lib/stores/categories';
+	import vendorStore from '$lib/stores/vendors';
 	import transactionStore from '$lib/stores/transactions';
 
 	export let showPanel: boolean;
@@ -24,11 +25,21 @@
 	let selectedDirection = '-1';
 	let enteredAmount = 0;
 
+	let selectedVendor = '';
+	let vendorOptions: Option[] = [];
+
 	let selectedCategory = '';
 	let categoryOptions: Option[] = [];
 
 	let selectedAccount = '';
 	let accountOptions: Option[] = [];
+
+	const unsubscribeFromVendorStore = vendorStore.subscribe((state) => {
+		vendorOptions = state.data.map((vendor: Vendor) => ({
+			label: vendor.name,
+			value: vendor.id
+		}));
+	});
 
 	const unsubscribeFromCategoryStore = categoryStore.subscribe((state) => {
 		categoryOptions = state.data.map((category: Category) => ({
@@ -46,6 +57,7 @@
 
 	onDestroy(() => {
 		unsubscribeFromCategoryStore();
+		unsubscribeFromVendorStore();
 		unsubscribeFromAccountStore();
 	});
 
@@ -53,6 +65,7 @@
 		enteredDescription = '';
 		enteredAmount = 0;
 		selectedCategory = '';
+		selectedVendor = '';
 
 		if (categoryOptions.length > 0) {
 			selectedCategory = categoryOptions[0].value;
@@ -85,23 +98,17 @@
 		</button>
 	</div>
 	<form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-y-4">
-		<div class="grid grid-cols-2 gap-x-4">
-			<SelectInput
-				label="Category"
-				isRequired
-				options={categoryOptions}
-				bind:value={selectedCategory}
-			/>
-			<SelectInput
-				label="Account"
-				isRequired
-				options={accountOptions}
-				bind:value={selectedAccount}
-			/>
-		</div>
-
 		<DateInput label="Date" bind:value={selectedDate} />
+
+		<SelectInput label="Vendor" options={vendorOptions} bind:value={selectedVendor} />
 		<TextInput label="Description" bind:value={enteredDescription} isRequired />
+		<SelectInput
+			label="Category"
+			isRequired
+			options={categoryOptions}
+			bind:value={selectedCategory}
+		/>
+		<SelectInput label="Account" isRequired options={accountOptions} bind:value={selectedAccount} />
 
 		<div class="grid grid-cols-2 gap-x-4">
 			<div class="flex flex-col">
