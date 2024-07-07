@@ -10,10 +10,17 @@
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
 	import accountStore from '$lib/stores/accounts';
 	import categoryStore from '$lib/stores/categories';
-	import type { Account, Category, LiftedTransaction, TransactionAdjustment } from '$lib/types';
+	import type {
+		Account,
+		Category,
+		LiftedTransaction,
+		TransactionAdjustment,
+		Vendor
+	} from '$lib/types';
 	import Heading from '$lib/components/Heading.svelte';
 	import Icon from '@iconify/svelte';
 	import transactionStore from '$lib/stores/transactions';
+	import vendorStore from '$lib/stores/vendors';
 
 	export let transaction: LiftedTransaction;
 	export let onClose = () => {};
@@ -23,6 +30,9 @@
 	let enteredDescription = '';
 	let selectedDirection = '-1';
 	let enteredAmount = 0;
+
+	let selectedVendor: string | undefined = '';
+	let vendorOptions: Option[] = [];
 
 	let selectedCategory = '';
 	let categoryOptions: Option[] = [];
@@ -41,6 +51,13 @@
 
 	let adjustmentsData: Adjustment[] = [];
 	let adjustmentsToDelete: string[] = [];
+
+	const unsubscribeFromVendorStore = vendorStore.subscribe((state) => {
+		vendorOptions = state.data.map((vendor: Vendor) => ({
+			label: vendor.name,
+			value: vendor.id
+		}));
+	});
 
 	const unsubscribeFromCategoryStore = categoryStore.subscribe((state) => {
 		categoryOptions = state.data.map((category: Category) => ({
@@ -69,6 +86,7 @@
 		enteredAmount = Math.abs(transaction.amount) / 100;
 		selectedCategory = transaction.category_id;
 		selectedAccount = transaction.account_id;
+		selectedVendor = transaction.vendor_id || undefined;
 
 		adjustmentsData = transaction.adjustments.map((adjustment) => ({
 			...adjustment,
@@ -79,6 +97,7 @@
 
 	onDestroy(() => {
 		unsubscribeFromCategoryStore();
+		unsubscribeFromVendorStore();
 		unsubscribeFromAccountStore();
 	});
 
@@ -126,7 +145,8 @@
 			description: enteredDescription,
 			amount: formatAmountForSave(enteredAmount, selectedDirection),
 			category_id: selectedCategory,
-			account_id: selectedAccount
+			account_id: selectedAccount,
+			vendor_id: selectedVendor
 		});
 
 		onSubmit();
@@ -163,18 +183,16 @@
 </script>
 
 <div class="flex flex-col gap-y-4 px-6">
-	<div class="grid grid-cols-2 gap-x-4">
-		<SelectInput
-			label="Category"
-			isRequired
-			options={categoryOptions}
-			bind:value={selectedCategory}
-		/>
-		<SelectInput label="Account" isRequired options={accountOptions} bind:value={selectedAccount} />
-	</div>
-
 	<DateInput label="Date" bind:value={selectedDate} />
+	<SelectInput label="Vendor" options={vendorOptions} bind:value={selectedVendor} />
 	<TextInput label="Description" bind:value={enteredDescription} isRequired />
+	<SelectInput
+		label="Category"
+		isRequired
+		options={categoryOptions}
+		bind:value={selectedCategory}
+	/>
+	<SelectInput label="Account" isRequired options={accountOptions} bind:value={selectedAccount} />
 
 	<div class="grid grid-cols-2 gap-x-4">
 		<div class="flex flex-col">

@@ -44,6 +44,13 @@
 	{#if !showEditPanel}
 		<div class="px-6 flex flex-col gap-2">
 			<div>
+				<span class="text-sm text-gray-400">Vendor</span>
+				<div>
+					{transaction.vendor.name}
+				</div>
+			</div>
+
+			<div>
 				<span class="text-sm text-gray-400">Category</span>
 				<CategoryTag color={transaction.category.color} name={transaction.category.name} />
 			</div>

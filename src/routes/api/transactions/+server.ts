@@ -45,7 +45,7 @@ export async function PATCH({ request, locals: { supabase, getSession } }) {
     throw error(401, 'Unauthorized');
   }
 
-  const { id, posted_at, description, amount, category_id, account_id } = await request.json();
+  const { id, posted_at, description, amount, category_id, account_id, vendor_id } = await request.json();
 
   const {
     data,
@@ -59,6 +59,7 @@ export async function PATCH({ request, locals: { supabase, getSession } }) {
       amount,
       category_id,
       account_id,
+      vendor_id: vendor_id || null,
       updated_at: new Date().toISOString(),
     })
     .eq('id', id)
