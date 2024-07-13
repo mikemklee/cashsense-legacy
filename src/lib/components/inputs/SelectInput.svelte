@@ -14,6 +14,9 @@
 	export let isRequired = false;
 	export let defaultValue = '';
 
+	let showOptions = false;
+	let selectedOption: Option | undefined = undefined;
+
 	onMount(() => {
 		if (!isRequired) return;
 
@@ -22,25 +25,53 @@
 		} else {
 			value = options[0].value;
 		}
+
+		selectedOption = options.find((option) => option.value === value);
 	});
+
+	function toggleOptions() {
+		showOptions = !showOptions;
+	}
+
+	function selectOption(option: Option) {
+		if (selectedOption === option) {
+			value = '';
+			selectedOption = undefined;
+		} else {
+			value = option.value;
+			selectedOption = option;
+		}
+		showOptions = false;
+	}
+
+	const sortedOptions = options.sort((a, b) => a.label.localeCompare(b.label));
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col relative">
 	<span class="text-sm">{label}{isRequired ? '*' : ''}</span>
-	<select
-		bind:value
-		class="px-2 py-1 border border-gray-400 bg-transparent rounded"
-		required={isRequired}
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<div
+		class="px-2 py-1 border border-gray-400 bg-transparent rounded cursor-pointer"
+		on:click={toggleOptions}
 	>
-		{#each options as option (option.value)}
-			<option value={option.value}>{option.label}</option>
-		{/each}
-	</select>
+		{selectedOption ? selectedOption.label : 'Select an option'}
+	</div>
+	{#if showOptions}
+		<div class="absolute w-full mt-16 border border-gray-400 rounded bg-gray-700 z-10">
+			{#each sortedOptions as option (option.value)}
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div
+					class="px-2 py-1 hover:bg-gray-600 cursor-pointer"
+					on:click={() => selectOption(option)}
+				>
+					{option.label}
+				</div>
+			{/each}
+		</div>
+	{/if}
 </div>
 
 <style>
-	select {
-		appearance: none; /* Remove default appearance */
-		background-color: transparent; /* Remove default background */
-	}
 </style>
