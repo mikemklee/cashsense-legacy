@@ -82,7 +82,8 @@
 			description: enteredDescription,
 			amount: centsWithDirection,
 			category_id: selectedCategory,
-			account_id: selectedAccount
+			account_id: selectedAccount,
+			vendor_id: selectedVendor || null
 		});
 
 		onSubmit();
