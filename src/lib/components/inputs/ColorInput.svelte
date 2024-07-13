@@ -12,7 +12,7 @@
 	<input
 		type="color"
 		bind:value
-		class="px-2 py-1 border border-gray-400 rounded"
+		class="px-2 py-1 border border-gray-600 rounded"
 		on:change={onChange}
 		required={isRequired}
 	/>

@@ -29,8 +29,17 @@
 		selectedOption = options.find((option) => option.value === value);
 	});
 
-	function toggleOptions() {
-		showOptions = !showOptions;
+	function handleShowOptions() {
+		if (showOptions) {
+			handleCloseOptions();
+		} else {
+			showOptions = true;
+			document.body.addEventListener('click', handleCloseOptions);
+		}
+	}
+	function handleCloseOptions() {
+		showOptions = false;
+		document.body.removeEventListener('click', handleCloseOptions);
 	}
 
 	function selectOption(option: Option) {
@@ -52,18 +61,18 @@
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
-		class="px-2 py-1 border border-gray-400 bg-transparent rounded cursor-pointer"
-		on:click={toggleOptions}
+		class="px-2 py-1 border border-gray-600 bg-transparent rounded cursor-pointer"
+		on:click|stopPropagation={handleShowOptions}
 	>
 		{selectedOption ? selectedOption.label : 'Select an option'}
 	</div>
 	{#if showOptions}
-		<div class="absolute w-full mt-16 border border-gray-400 rounded bg-gray-700 z-10">
+		<div class="absolute w-full mt-16 border border-gray-600 rounded bg-gray-700 z-10">
 			{#each sortedOptions as option (option.value)}
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
-					class="px-2 py-1 hover:bg-gray-600 cursor-pointer"
+					class="px-2 py-1 hover:bg-gray-600 cursor-pointer border-b border-gray-600 last-of-type:border-b-0"
 					on:click={() => selectOption(option)}
 				>
 					{option.label}
