@@ -67,7 +67,9 @@
 		{selectedOption ? selectedOption.label : 'Select an option'}
 	</div>
 	{#if showOptions}
-		<div class="absolute w-full mt-16 border border-gray-600 rounded bg-gray-700 z-10">
+		<div
+			class="absolute w-full mt-16 border border-gray-600 rounded bg-gray-700 z-10 options-container"
+		>
 			{#each sortedOptions as option (option.value)}
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -78,9 +80,20 @@
 					{option.label}
 				</div>
 			{/each}
+			<div class="pointer-events-none text-xs opacity-50 py-0.5 text-center">End of list</div>
 		</div>
 	{/if}
 </div>
 
 <style>
+	.options-container {
+		max-height: 400px; /* Adjust the height as needed */
+		overflow-y: auto;
+		scrollbar-width: none; /* For Firefox */
+		-ms-overflow-style: none; /* For Internet Explorer and Edge */
+	}
+
+	.options-container::-webkit-scrollbar {
+		display: none; /* For Chrome, Safari, and Opera */
+	}
 </style>
