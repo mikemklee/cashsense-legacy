@@ -1,4 +1,4 @@
 # cashsense
 Your personal finance copilot
 
-![image](https://github.com/mikemklee/cashsense/assets/17537040/5f92eaa1-787c-4192-93d2-873d25dd08cf)
+![image](https://github.com/user-attachments/assets/66ee7f41-80e5-41db-8447-36d49ea7f8e8)
